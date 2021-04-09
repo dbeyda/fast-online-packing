@@ -2,5 +2,6 @@
     "reportMissingTypeStubs": false,
     "python.analysis.useLibraryCodeForTypes": false,
     "reportUnknownArgumentType": false,
-    "reportUnknownMemberType": false
+    "reportUnknownMemberType": false,
+    "reportUnknownVariableType": false
 }

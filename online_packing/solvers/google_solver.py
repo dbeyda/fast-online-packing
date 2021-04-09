@@ -1,25 +1,10 @@
-from abc import ABC, abstractmethod
 from ortools.algorithms import pywrapknapsack_solver
 from typing import List, Any, Tuple
 from online_packing.packing_problem import PackingProblem
+from online_packing.solvers.base_solver import BaseSolver
 
 
-class AbstractPackingSolver(ABC):
-    problem: PackingProblem
-
-    def __init__(self, p: PackingProblem):
-        self.problem = p
-
-    @abstractmethod
-    def solve(self) -> None:
-        pass
-
-    @abstractmethod
-    def print_result(self) -> None:
-        pass
-
-
-class GooglePackingSolver(AbstractPackingSolver):
+class GoogleSolver(BaseSolver):
     solver: Any
     values: List[int]
     costs: List[List[int]]
@@ -27,9 +12,10 @@ class GooglePackingSolver(AbstractPackingSolver):
     decimal_places: int
 
     def __init__(self, p: PackingProblem, decimal_places: int = 6):
-        if p.itens_per_instant != 1:
+        if p.options_per_instant != 2 or p.mandatory_packing:
             raise Exception(
-                "[GooglePackingSolver][Error] Can only solve problems with one item per instant.")
+                "[GoogleSolver][Error] Can only solve problems with options_per_instant=2 and \
+                 mandatory_packing=False.")
         super().__init__(p)
         self.decimal_places = decimal_places
         self.values, self.costs, self.capacity = self.adapter()

@@ -1,10 +1,14 @@
 absl-py==0.12.0
 autopep8==1.5.6
+cffi==1.14.5
 flake8==3.9.0
 mccabe==0.6.1
+mip==1.13.0
+-e git+https://github.com/dbeyda/agrawal-devanur-online-packing.git@901a932e908a430a5fa1970944b20db48f98dc86#egg=online_packing
 ortools==8.2.8710
 protobuf==3.15.7
 pycodestyle==2.7.0
+pycparser==2.20
 pyflakes==2.3.1
 six==1.15.0
 toml==0.10.2
