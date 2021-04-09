@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from ortools.algorithms import pywrapknapsack_solver
-from typing import List, Any
+from typing import List, Any, Tuple
 from online_packing.packing_problem import PackingProblem
 
 
@@ -14,6 +14,10 @@ class AbstractPackingSolver(ABC):
     def solve(self) -> None:
         pass
 
+    @abstractmethod
+    def print_result(self) -> None:
+        pass
+
 
 class GooglePackingSolver(AbstractPackingSolver):
     solver: Any
@@ -23,27 +27,32 @@ class GooglePackingSolver(AbstractPackingSolver):
     decimal_places: int
 
     def __init__(self, p: PackingProblem, decimal_places: int = 6):
+        if p.itens_per_instant != 1:
+            raise Exception(
+                "[GooglePackingSolver][Error] Can only solve problems with one item per instant.")
         super().__init__(p)
         self.decimal_places = decimal_places
-        self.integer_adapter(self.problem)
+        self.values, self.costs, self.capacity = self.adapter()
         self.solver = pywrapknapsack_solver.KnapsackSolver(pywrapknapsack_solver.KnapsackSolver
                                                            .KNAPSACK_MULTIDIMENSION_BRANCH_AND_BOUND_SOLVER,
                                                            'KnapsackExample')
         self.solver.Init(self.values, self.costs, self.capacity)
 
-    def solve(self):
-        result: int = self.solver.Solve()
-        self.packed_value: float = result / pow(10, self.decimal_places)
-
-    def integer_adapter(self, p: PackingProblem) -> None:
+    def adapter(self) -> Tuple[List[int], List[List[int]], List[int]]:
         factor = pow(10, self.decimal_places)
-        self.values = list(map(lambda x: int(factor * x), p.values))
-        self.costs = [list(map(lambda x: int(factor * x), dimension_costs))
-                      for dimension_costs in p.costs]
-        self.capacity = [int(p.capacity * factor)] * p.cost_dimension
+        capacity = [int(self.problem.capacity * factor)] * self.problem.cost_dimension
+        values = [int(t[0]*factor) for t in self.problem.values]
+        costs = [[int(self.problem.costs[t][0][dim]*factor)
+                  for t in range(self.problem.instants)]
+                 for dim in range(self.problem.cost_dimension)]
+        return values, costs, capacity
+
+    def solve(self):
+        self.packed_value: float = self.solver.Solve()
 
     def print_result(self):
-        print('Total value =', self.packed_value)
+        factor = pow(10, self.decimal_places)
+        print(f"Total value = {self.packed_value / factor:.5f}")
         packed_items = []
         packed_weights = []
         total_weight = [0] * self.problem.cost_dimension
@@ -51,13 +60,14 @@ class GooglePackingSolver(AbstractPackingSolver):
         for i in range(len(self.values)):
             if self.solver.BestSolutionContains(i):
                 packed_items.append(i)
-                packed_weights.append(self.costs[0][i])
+                packed_weights.append(self.costs[0][i] / factor)
                 for dim in range(self.problem.cost_dimension):
-                    total_weight[dim] += self.costs[dim][i]
+                    total_weight[dim] += self.costs[dim][i] / factor
         for dim in range(self.problem.cost_dimension):
-            print(f"\tTotal weight dim {dim}: {total_weight[dim]} / {self.capacity[0]}")
-        print('Packed items:', packed_items)
-        print('Packed_weights:', packed_weights)
+            print(
+                f"\tTotal weight dim {dim}: {total_weight[dim]:.5f} / {self.capacity[dim] / factor:.5f}")
+        print(f"Packed items: {packed_items}")
+        print(f"Packed_weights: {packed_weights}")
 
 
 #########################################################
