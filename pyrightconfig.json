@@ -1,0 +1,6 @@
+{
+    "reportMissingTypeStubs": false,
+    "python.analysis.useLibraryCodeForTypes": false,
+    "reportUnknownArgumentType": false,
+    "reportUnknownMemberType": false
+}
