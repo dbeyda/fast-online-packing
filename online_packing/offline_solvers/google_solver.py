@@ -1,7 +1,7 @@
 from ortools.algorithms import pywrapknapsack_solver
 from typing import List, Any, Tuple
 from online_packing.packing_problem import PackingProblem
-from online_packing.solvers.base_solver import BaseSolver
+from online_packing.offline_solvers.base_solver import BaseSolver
 
 
 class GoogleSolver(BaseSolver):
@@ -10,6 +10,7 @@ class GoogleSolver(BaseSolver):
     costs: List[List[int]]
     capacity: List[int]
     decimal_places: int
+    optimum_value: float
 
     def __init__(self, p: PackingProblem, decimal_places: int = 6):
         if p.options_per_instant != 2 or p.mandatory_packing:
@@ -27,18 +28,19 @@ class GoogleSolver(BaseSolver):
     def adapter(self) -> Tuple[List[int], List[List[int]], List[int]]:
         factor = pow(10, self.decimal_places)
         capacity = [int(self.problem.capacity * factor)] * self.problem.cost_dimension
-        values = [int(t[0]*factor) for t in self.problem.values]
-        costs = [[int(self.problem.costs[t][0][dim]*factor)
+        values = [int(t[0]*factor) for t in self.problem.available_values]
+        costs = [[int(self.problem.available_costs[t][0][dim]*factor)
                   for t in range(self.problem.instants)]
                  for dim in range(self.problem.cost_dimension)]
         return values, costs, capacity
 
     def solve(self):
-        self.packed_value: float = self.solver.Solve()
+        factor = pow(10, self.decimal_places)
+        self.optimum_value: float = self.solver.Solve() / factor
 
     def print_result(self):
         factor = pow(10, self.decimal_places)
-        print(f"Total value = {self.packed_value / factor:.5f}")
+        print(f"Total value = {self.optimum_value:.5f}")
         packed_items = []
         packed_weights = []
         total_weight = [0] * self.problem.cost_dimension

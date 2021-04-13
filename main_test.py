@@ -1,5 +1,5 @@
-from online_packing.solvers.google_solver import GoogleSolver
-from online_packing.solvers.python_mip_solver import PythonMIPSolver
+from online_packing.offline_solvers.google_solver import GoogleSolver
+from online_packing.offline_solvers.python_mip_solver import PythonMIPSolver
 from online_packing.instance_generator import generator
 
 t = 50
