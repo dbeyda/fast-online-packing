@@ -18,7 +18,7 @@ class GoogleKnapsackSolver(BaseSolver):
         GoogleKnapsackSolver.validate_instance(values, costs)
         super().__init__(values, costs, capacity)
         self.decimal_places = decimal_places
-        self.adapted_values, self.adapted_costs, self.adapted_capacity = self.adapter()
+        self.adapted_values, self.adapted_costs, self.adapted_capacity = self._adapter()
         self.solver = pywrapknapsack_solver.KnapsackSolver(pywrapknapsack_solver.KnapsackSolver
                                                            .KNAPSACK_MULTIDIMENSION_BRANCH_AND_BOUND_SOLVER,
                                                            'KnapsackExample')
@@ -34,7 +34,7 @@ class GoogleKnapsackSolver(BaseSolver):
             if(len(cost_options) != 2):
                 raise Exception("Each day should have two cost options: a real one, and a 0 one.")
 
-    def adapter(self) -> Tuple[List[int], List[List[int]], List[int]]:
+    def _adapter(self) -> Tuple[List[int], List[List[int]], List[int]]:
         factor = pow(10, self.decimal_places)
         capacity = [int(self._capacity * factor)] * self._cost_dimension
         values = [int(t[0]*factor) for t in self._values]

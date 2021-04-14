@@ -7,6 +7,7 @@ class PythonMIPSolver(BaseSolver):
     solver: Any
     max_seconds: int
     status: int
+    optimum_value: Union[float] = 0.0
 
     def __init__(self, values: List[List[Union[float, int]]],
                  costs: List[List[List[Union[float, int]]]],
@@ -14,9 +15,9 @@ class PythonMIPSolver(BaseSolver):
                  max_seconds: int = 30):
         super().__init__(values, costs, capacity)
         self.max_seconds = max_seconds
-        self.build_model()
+        self._build_model()
 
-    def build_model(self) -> None:
+    def _build_model(self) -> None:
         self.solver = Model(sense=MAXIMIZE, solver_name=CBC)
         m = self.solver
         m.verbose = 0
@@ -35,6 +36,7 @@ class PythonMIPSolver(BaseSolver):
 
     def solve(self):
         self.status = self.solver.optimize(max_seconds=self.max_seconds)
+        self.optimum_value = self.solver.objective_value
 
     def print_result(self):
         m = self.solver
