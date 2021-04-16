@@ -34,7 +34,7 @@ class PackingProblem:
 
     def _set_cost_dimension(self, cost_dimension: int):
         if cost_dimension <= 0:
-            raise Exception("cost_dimension has to be greter than 0")
+            raise Exception("cost_dimension has to be greater than 0")
         self._cost_dimension = cost_dimension
 
     def _set_capacity(self, capacity: Union[float, int]):
@@ -127,3 +127,9 @@ class PackingProblem:
 
     def get_available_costs(self):
         return copy.deepcopy(self._available_costs)
+
+    def get_state(self):
+        return self._state
+
+    def get_cost_dimension(self):
+        return self._cost_dimension

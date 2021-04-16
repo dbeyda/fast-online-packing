@@ -8,6 +8,9 @@ class BaseSolver(ABC):
     _costs: List[List[List[Union[float, int]]]]
     _options_per_instant: int
     _cost_dimension: int
+    optimum_value: Union[float, int]
+    packed_items: List[int]
+    packed_weight_sum: List[float]
 
     def __init__(self, values: List[List[Union[float, int]]],
                  costs: List[List[List[Union[float, int]]]],
@@ -18,11 +21,16 @@ class BaseSolver(ABC):
         self._values = values
         self._costs = costs
         self._capacity = capacity
+        self.optimum_value = 0.0
+        self.packed_items = list()
+        self.packed_weight_sum = [0.0 for _ in range(self._cost_dimension)]
 
     @abstractmethod
     def solve(self) -> None:
         pass
 
-    @abstractmethod
     def print_result(self) -> None:
-        pass
+        print(f"Total value = {self.optimum_value:.4f}")
+        for dim in range(self._cost_dimension):
+            print(
+                f"\tTotal weight dim {dim}: {self.packed_weight_sum[dim]:.5f} / {self._capacity:.5f}")

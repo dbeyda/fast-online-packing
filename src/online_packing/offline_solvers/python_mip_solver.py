@@ -7,7 +7,6 @@ class PythonMIPSolver(BaseSolver):
     solver: Any
     max_seconds: int
     status: int
-    optimum_value: Union[float] = 0.0
 
     def __init__(self, values: List[List[Union[float, int]]],
                  costs: List[List[List[Union[float, int]]]],
@@ -21,9 +20,9 @@ class PythonMIPSolver(BaseSolver):
         self.solver = Model(sense=MAXIMIZE, solver_name=CBC)
         m = self.solver
         m.verbose = 0
-        x = [[m.add_var(var_type=BINARY)
-              for _ in range(self._options_per_instant)]
-             for _ in range(self._size)]
+        x = [[m.add_var(name=f"x[{t}][{opt}]", var_type=BINARY)
+              for opt in range(self._options_per_instant)]
+             for t in range(self._size)]
         for dim in range(self._cost_dimension):
             m += xsum(self._costs[i][item][dim]*x[i][item]
                       for item in range(self._options_per_instant)
@@ -36,13 +35,14 @@ class PythonMIPSolver(BaseSolver):
 
     def solve(self):
         self.status = self.solver.optimize(max_seconds=self.max_seconds)
-        self.optimum_value = self.solver.objective_value
-
-    def print_result(self):
-        m = self.solver
-        if self.status == OptimizationStatus.OPTIMAL:
-            print(f"optimal solution cost {m.objective_value:.5f} found")
-        elif self.status == OptimizationStatus.FEASIBLE:
-            print(f"sol.cost {m.objective_value:.5f} found, best possible: {m.objective_bound:.5f}")
-        elif self.status == OptimizationStatus.NO_SOLUTION_FOUND:
-            print("no feasible solution found, lower bound is: {m.objective_bound:.5f}")
+        if self.status in [OptimizationStatus.OPTIMAL, OptimizationStatus.FEASIBLE]:
+            self.optimum_value = self.solver.objective_value
+            for idx, v in enumerate(self.solver.vars):
+                if abs(v.x) > 1e-6:  # chosen options for an instant are the positive variables
+                    chosen_idx = idx % self._options_per_instant
+                    self.packed_items.append(chosen_idx)
+            for t, packed_idx in enumerate(self.packed_items):
+                for dim in range(self._cost_dimension):
+                    self.packed_weight_sum[dim] += self._costs[t][packed_idx][dim]
+        else:
+            self.optimum_value = float("inf")

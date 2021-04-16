@@ -1,56 +1,52 @@
-from math import log, sqrt
-from typing import List, Union
+from math import log, sqrt, ceil
+from typing import List, Union, Type
 import random
 from online_packing.mwu_max import MwuMax
-from enum import Enum, auto
 from operator import itemgetter
 from online_packing import helper
-from online_packing.offline_solvers.python_mip_solver import PythonMIPSolver
+from online_packing.offline_solvers.base_solver import BaseSolver
 from online_packing.packing_problem import PackingProblem
 
 
 class OnlineSolver:
-    class State(Enum):
-        RUNNING = auto()
-        FINISHED = auto()
-
     p: PackingProblem
     e: float
-    cost_dimension: int
     theta: MwuMax
     z: Union[float, None] = None
     delta: float
     total_time: int
     current_time: int
-    state: State
+    optimum_value: float
 
     # TODO: receive different solvers in this function
-    def __init__(self, e: float, cost_dimension: int, total_time: int, capacity: float):
+    def __init__(self, e: float, cost_dimension: int, total_time: int, capacity: float,
+                 solver_cls: Type[BaseSolver]):
         self.p = PackingProblem(capacity, cost_dimension)
         self._init_params(e, cost_dimension, total_time)
-        self._solver_cls = PythonMIPSolver
-        self.state = OnlineSolver.State.RUNNING
+        self._solver_cls = solver_cls
+        self.optimum_value = float("inf")
 
     def _init_params(self, e: float, cost_dimension: int, total_time: int):
         # TODO test if e is in the valid range
         self.e = e
         self.z = None
-        # TODO set delta using e
         e_2 = self.e * self.e
         self.delta = 12 * e_2 * log((cost_dimension+2)/e_2) / log(cost_dimension)
-        # self.delta = 0.2
         self.current_time = 1
-        self._initial_phase_size = self.delta * total_time
+        self._initial_phase_size = int(ceil(self.delta * total_time))
         self.total_time = total_time
-        self.cost_dimension = cost_dimension
         self.theta = MwuMax(self.cost_dimension, self.e)
 
+    @property
+    def cost_dimension(self):
+        return self.p.get_cost_dimension()
+
     def print_params(self):
-        print("cost_dimension = ", self.cost_dimension)
-        print("e = ", self.e)
-        print("delta = ", self.delta)
-        print("_initial_phase_size = ", self._initial_phase_size)
-        print("total_time = ", self.total_time)
+        print("\tcost dimension = ", self.cost_dimension)
+        print("\te = ", self.e)
+        print("\tdelta = ", self.delta)
+        print("\tinitial phase size = ", self._initial_phase_size)
+        print("\ttotal time = ", self.total_time)
 
     def _compute_z(self) -> float:
         scaled_cap = (self.delta * self.p.get_capacity() +
@@ -63,7 +59,6 @@ class OnlineSolver:
     def _choose_index_to_pack(self, available_values: List[float],
                               available_costs: List[List[float]]) -> int:
         if self.current_time <= self._initial_phase_size:
-            # return len(available_values)-1
             return random.randint(0, len(available_values)-1)
         else:
             if self.z is None:
@@ -79,7 +74,7 @@ class OnlineSolver:
 
     def pack_one(self, available_values: List[float], available_costs: List[List[float]]):
         self.p.set_current_inputs(available_values, available_costs)
-        if self.state is OnlineSolver.State.RUNNING:
+        if self.p.get_state() is PackingProblem.State.RUNNING:
             chosen_idx = self._choose_index_to_pack(available_values, available_costs)
             if self.p.item_fits(chosen_idx):
                 self.p.pack(chosen_idx)
@@ -87,11 +82,11 @@ class OnlineSolver:
                 self.theta.update_weights(mwu_gains)
             else:
                 self.p.end_packing()
-                self.state = OnlineSolver.State.FINISHED
         self.current_time += 1
 
     def compute_optimum(self) -> float:
         s = self._solver_cls(self.p.get_available_values(),
                              self.p.get_available_costs(), self.p.get_capacity())
         s.solve()
+        self.optimum_value = s.optimum_value
         return s.optimum_value

@@ -9,7 +9,6 @@ class GoogleKnapsackSolver(BaseSolver):
     adapted_costs: List[List[int]]
     adapted_capacity: List[int]
     decimal_places: int
-    optimum_value: float
 
     def __init__(self, values: List[List[Union[float, int]]],
                  costs: List[List[List[Union[float, int]]]],
@@ -46,23 +45,12 @@ class GoogleKnapsackSolver(BaseSolver):
     def solve(self):
         factor = pow(10, self.decimal_places)
         self.optimum_value: float = self.solver.Solve() / factor
-
-    def print_result(self):
-        factor = pow(10, self.decimal_places)
-        print(f"Total value = {self.optimum_value:.5f}")
-        packed_items = []
-        packed_weights = []
-        total_weight = [0] * self._cost_dimension
+        self.packed_items = list()
 
         for i in range(len(self.adapted_values)):
-            if self.solver.BestSolutionContains(i):
-                packed_items.append(i)
-                packed_weights.append(self.adapted_costs[0][i] / factor)
-                for dim in range(self._cost_dimension):
-                    total_weight[dim] += self.adapted_costs[dim][i] / factor
-        for dim in range(self._cost_dimension):
-            print(
-                f"\tTotal weight dim {dim}: \
-                    {total_weight[dim]:.5f} / {self.adapted_capacity[dim] / factor:.5f}")
-        print(f"Packed items: {packed_items}")
-        print(f"Packed_weights: {packed_weights}")
+            # if item was packed it was first option of the instant
+            # if item was not packed, second option is packing nothing
+            packed_idx = 0 if self.solver.BestSolutionContains(i) else 1
+            self.packed_items.append(packed_idx)
+            for dim in range(self._cost_dimension):
+                self.packed_weight_sum[dim] += self._costs[i][packed_idx][dim]
