@@ -30,3 +30,6 @@ class MwuMax:
 
     def get_probs(self):
         return copy.copy(self._probs)
+
+    def get_n_experts(self):
+        return self._n_experts

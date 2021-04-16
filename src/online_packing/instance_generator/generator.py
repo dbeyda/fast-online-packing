@@ -8,6 +8,8 @@ def new_packing_problem(n_instants: int, cost_dim: int, itens_per_instant: int =
         Tuple[List[List[float]], List[List[List[float]]], float]:
     # setting mandatory_packing=False adds a new item in each instant
     # have value=0 and cost=0 in all dimensions
+    assert itens_per_instant > 0
+    assert cost_dim > 0
     cap = random() * n_instants/3
 
     values: List[List[float]] = [[random() for _ in range(itens_per_instant)] for _ in range(n_instants)]
