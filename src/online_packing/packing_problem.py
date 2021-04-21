@@ -8,29 +8,29 @@ class PackingProblem:
         RUNNING = auto()
         FINISHED = auto()
 
-    _capacity: Union[int, float] = -1
+    _capacity: Union[int, float]
     # internal use
-    _packed_items: List[int] = list()
+    _packed_items: List[int]
     _packed_value_sum: Union[int, float]
     _packed_costs_sum: List[Union[int, float]]
     _cost_dimension: int
     _options_per_instant: int
     # inputs seen in until current time
     # values: 1st index = day   //   2nd index = item value
-    _available_values: List[List[Union[int, float]]] = list()
+    _available_values: List[List[Union[int, float]]]
     # costs: 1st index = day   //   2nd index = item costs vector   //   3rd index = item cost dimension
-    _available_costs: List[List[List[Union[int, float]]]] = list()
+    _available_costs: List[List[List[Union[int, float]]]]
     _state: State
 
     def __init__(self, capacity: Union[float, int], cost_dimension: int):
         self._packed_value_sum = 0.0
         self._state = PackingProblem.State.RUNNING
+        self._capacity = -1
         self._set_capacity(capacity)
         self._set_cost_dimension(cost_dimension)
-
-    @property
-    def waiting_for_input(self) -> bool:
-        return len(self._available_values) == len(self._packed_items)
+        self._available_values = list()
+        self._available_costs = list()
+        self._packed_items = list()
 
     def _set_cost_dimension(self, cost_dimension: int):
         if cost_dimension <= 0:
@@ -47,6 +47,9 @@ class PackingProblem:
 
     def get_capacity(self):
         return self._capacity
+
+    def get_options_per_instant(self):
+        return self._options_per_instant
 
     def _validate_curr_inputs(self,
                               values: List[Union[int, float]],
@@ -91,7 +94,7 @@ class PackingProblem:
 
     def item_fits(self, idx: int) -> bool:
         for dim in range(self._cost_dimension):
-            if self._available_costs[-1][idx][dim] + self._packed_costs_sum[dim] > self._capacity - 1e-6:
+            if self._available_costs[-1][idx][dim] + self._packed_costs_sum[dim] > self._capacity + 1e-6:
                 return False
         return True
 

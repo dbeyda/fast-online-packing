@@ -28,14 +28,10 @@ class TestMwuMax():
         m = MwuMax(3, 0.1)
         assert m.get_n_experts() == 3
 
-    @pytest.fixture
-    def mwu_instance(self):
+    def test_get_probs(self):
         m = MwuMax(3, 0.1)
         m.update_weights([0.5, 0.5, -0.1])
-        return m
-
-    def get_probs(self, mwu_instance: MwuMax):
-        p = mwu_instance.get_probs()
-        assert len(p) == mwu_instance.get_n_experts()
+        p = m.get_probs()
+        assert len(p) == m.get_n_experts()
         p.append(2)
-        assert len(p) == mwu_instance.get_n_experts()
+        assert len(m.get_probs()) == m.get_n_experts()
