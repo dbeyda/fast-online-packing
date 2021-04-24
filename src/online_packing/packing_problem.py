@@ -1,15 +1,71 @@
+"""This module encapsulates and formalizes all aspects
+and rules of the Online Packing Problem.
+
+For each instant, the algorithm receives k options of items, each one with a value and a cost-vector.
+The algorithm *must* choose an option to pack, and then waits to receive the next options for the next
+instant. The algorithm may not pack any item that that causes a violation of the capacity constraint in some
+dimension. When there is no feasible option to choose, the algorithm can *end* the packing. When
+that happens, new inputs for the next instants may be given repeatedly, and the algorithm can not
+pack any item anymore.
+
+In order to accomodate instances that allow the algorithm to skip packing in some instants,
+it is enough to add an item with value :math:`0` and cost :math:`0` in every dimension.
+This item should be added to all the instants.
+"""
 from enum import Enum, auto
 from typing import List, Union
 import copy
 
 
 class PackingProblem:
+    """Class that enforces all aspects of the
+    online packing problem.
+
+    This class is statefull, meaning it carries the current state
+    of the game, and some methods depend on that state.
+
+    Parameters
+    ----------
+    capacity : float or int
+        The capacity for the problem (same in every dimension).
+    cost_dimension : int
+        The dimension of the cost vector.
+
+    Methods
+    -------
+    set_current_inputs(values, costs)
+        Set items' values and costs for the current instant.
+    item_fits(idx)
+        Checks if current instant's item of index `idx` fits in capacity constraints.
+    pack(idx)
+        Pack current instant's item of index `idx`.
+    end_packing()
+        Ends the packing phase.
+    get_capacity()
+        Get capacity of the problem instance.
+    get_options_per_instant()
+        Get the number of available items in each instant.
+    get_available_values()
+        Get the value of the items that are available for the current instant.
+    get_available_costs()
+        Get the cost of the items that are available for the current instant.
+    get_state()
+        Get instance state.
+    get_cost_dimension()
+        Get the dimension of the cost vectors.
+    """
+
     class State(Enum):
+        """ Enumerates the state of the problem instance.
+
+        RUNNING: User can still pack items.
+
+        FINISHED: User can not pack items anymore.
+        """
         RUNNING = auto()
         FINISHED = auto()
 
     _capacity: Union[int, float]
-    # internal use
     _packed_items: List[int]
     _packed_value_sum: Union[int, float]
     _packed_costs_sum: List[Union[int, float]]
@@ -32,12 +88,38 @@ class PackingProblem:
         self._available_costs = list()
         self._packed_items = list()
 
-    def _set_cost_dimension(self, cost_dimension: int):
+    def _set_cost_dimension(self, cost_dimension: int) -> None:
+        """Validates cost dimension and sets cost dimension.
+
+        Parameters
+        ----------
+        cost_dimension : int
+            The dimension of the cost vectors.
+
+        Raises
+        ------
+        Exception
+            If `cost_dimension` is lower than 1.
+        """
         if cost_dimension <= 0:
             raise Exception("cost_dimension has to be greater than 0")
         self._cost_dimension = cost_dimension
 
     def _set_capacity(self, capacity: Union[float, int]):
+        """Validates and sets capacity for the problem.
+
+        Parameters
+        ----------
+        capacity : float or int
+            The capacity of each dimension (they must be the same).
+
+        Raises
+        -------
+        Exception
+            If capacity already set.
+        Exception
+            If capacity is negative.
+        """
         if capacity < 0 - 1e-6:
             raise Exception(f"Capacity must be >= 0 (tried setting to {capacity}).")
         elif self._capacity >= 0-1e-6:
@@ -45,10 +127,24 @@ class PackingProblem:
         else:
             self._capacity = capacity
 
-    def get_capacity(self):
+    def get_capacity(self) -> Union[int, float]:
+        """Get the problem capacity.
+
+        Returns
+        -------
+        int or float
+            Previously set problem capacity.
+        """
         return self._capacity
 
-    def get_options_per_instant(self):
+    def get_options_per_instant(self) -> int:
+        """Get the number of available items per instant.
+
+        Returns
+        -------
+        int
+            Number of available items per instant.
+        """
         return self._options_per_instant
 
     def _validate_curr_inputs(self,
@@ -93,12 +189,47 @@ class PackingProblem:
             self._packed_costs_sum = [0.0 for _ in range(self._cost_dimension)]
 
     def item_fits(self, idx: int) -> bool:
+        """Checks that currently available item of index `idx` fits the capacity constriants.
+
+        Parameters
+        ----------
+        idx : int
+            Index of the item to be verified.
+
+        Returns
+        -------
+        bool
+            True if the item fits the constraints, False otherwise.
+        """
         for dim in range(self._cost_dimension):
             if self._available_costs[-1][idx][dim] + self._packed_costs_sum[dim] > self._capacity + 1e-6:
                 return False
         return True
 
     def pack(self, idx: int) -> Union[int, float]:
+        """Pack item of index `idx`, from the currently available.
+
+        Parameters
+        ----------
+        idx : int
+            Index of the item to pack.
+
+        Returns
+        -------
+        int or float
+            Total value of the packed items so far.
+
+        Raises
+        ------
+        Exception
+            `end_packing()` was previously called and instance is in `State.FINISHED` state.
+        Exception
+            An item was already packed for the current instant.
+        Exception
+            Index for the item out of bounds.
+        Exception
+            Chosen item  exceed capacity in some dimension.
+        """
         if self._state is PackingProblem.State.FINISHED:
             raise Exception(
                 "Packing already finished. You may not continue to pack after packing was ended.")
@@ -119,20 +250,57 @@ class PackingProblem:
         else:
             raise Exception("Tried to pack an item that exceeds capacity in some dimension")
 
-    def end_packing(self):
+    def end_packing(self) -> None:
+        """Changes instance state into `State.FINISHED`.
+
+        Raises
+        ------
+        Exception
+            If problem is already in `State.FINISHED` state.
+        """
         if self._state is PackingProblem.State.RUNNING:
             self._state = PackingProblem.State.FINISHED
         else:
             raise Exception("Problem state is already FINISHED.")
 
-    def get_available_values(self):
+    def get_available_values(self) -> List[List[Union[int, float]]]:
+        """Get values of all the available items for past and current instants.
+
+        Returns
+        -------
+        list of list of (int or float)
+            List contianing, for each instant, a list with the values of the available items for \
+            that instant.
+        """
         return copy.deepcopy(self._available_values)
 
-    def get_available_costs(self):
+    def get_available_costs(self) -> List[List[List[Union[int, float]]]]:
+        """Get costs of all the available items for past and current instants.
+
+        Returns
+        -------
+        list of list of list of (int or float)
+            List contianing, for each instant, a list with the cost vectors of the available items for \
+            that instant.
+        """
         return copy.deepcopy(self._available_costs)
 
-    def get_state(self):
+    def get_state(self) -> State:
+        """Get the state of the problem instance.
+
+        Returns
+        -------
+        {State.RUNNING, State.FINISHED}
+            The current problem state.
+        """
         return self._state
 
     def get_cost_dimension(self):
+        """Get the dimension of the cost vectors.
+
+        Returns
+        -------
+        int
+            The dimension of the cost vectors.
+        """
         return self._cost_dimension

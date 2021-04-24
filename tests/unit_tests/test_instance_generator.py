@@ -1,23 +1,23 @@
-from online_packing.instance_generator.generator import new_packing_problem
+from online_packing.instance_generator.generator import generate_valid_instance
 import pytest
 
 
 class TestNewPackingProblem:
     def test_wrong_params(self):
         with pytest.raises(Exception):
-            new_packing_problem(15, 0, 3)
+            generate_valid_instance(15, 0, 3)
         with pytest.raises(Exception):
-            new_packing_problem(15, 3, 0)
+            generate_valid_instance(15, 3, 0)
 
     def test_mandatory_true(self):
-        _, c, _ = new_packing_problem(10, 3, 3, True)
+        _, c, _, _ = generate_valid_instance(10, 3, 3, True)
         for day in c:
             for dim in day[-1]:
                 if not (-1e-6 <= dim <= 1e-6):
                     break  # passed test
 
     def test_mandatory_false(self):
-        v, c, _ = new_packing_problem(10, 3, 3, False)
+        v, c, _, _ = generate_valid_instance(10, 3, 3, False)
         for day in c:
             for dim in day[-1]:
                 assert (-1e-6 <= dim <= 1e-6)

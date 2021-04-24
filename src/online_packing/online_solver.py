@@ -12,7 +12,7 @@ class OnlineSolver:
     p: PackingProblem
     e: float
     theta: MwuMax
-    z: Union[float, None] = None
+    z: Union[float, None]
     delta: float
     total_time: int
     current_time: int
@@ -21,13 +21,17 @@ class OnlineSolver:
     # TODO: receive different solvers in this function
     def __init__(self, e: float, cost_dimension: int, total_time: int, capacity: float,
                  solver_cls: Type[BaseSolver]):
+        self.z = None
         self.p = PackingProblem(capacity, cost_dimension)
-        self._init_params(e, cost_dimension, total_time)
+        self._init_params(e, cost_dimension, total_time, capacity)
         self._solver_cls = solver_cls
         self.optimum_value = float("inf")
 
-    def _init_params(self, e: float, cost_dimension: int, total_time: int):
+    def _init_params(self, e: float, cost_dimension: int, total_time: int, capacity: float):
         # TODO test if e is in the valid range
+        # self.e = sqrt(log(cost_dimension, 2)/capacity)
+        # if (e < self.e-1e-6):
+        #     raise Exception(f"Param e = {e} not valid. For cap = {capacity}, e >= {self.e}")
         self.e = e
         self.z = None
         e_2 = self.e * self.e
@@ -59,7 +63,8 @@ class OnlineSolver:
     def _choose_index_to_pack(self, available_values: List[float],
                               available_costs: List[List[float]]) -> int:
         if self.current_time <= self._initial_phase_size:
-            return random.randint(0, len(available_values)-1)
+            return max(enumerate(available_values), key=itemgetter(1))[0]
+            # return random.randint(0, len(available_values)-1)
         else:
             if self.z is None:
                 self.z = self._compute_z()
