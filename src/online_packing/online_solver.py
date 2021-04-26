@@ -46,11 +46,12 @@ class OnlineSolver:
         return self.p.get_cost_dimension()
 
     def print_params(self):
-        print("\tcost dimension = ", self.cost_dimension)
-        print("\te = ", self.e)
-        print("\tdelta = ", self.delta)
-        print("\tinitial phase size = ", self._initial_phase_size)
-        print("\ttotal time = ", self.total_time)
+        print(f"\tcapacity = {self.p.get_capacity()}")
+        print(f"\tcost dimension = {self.cost_dimension}")
+        print(f"\te = {self.e}")
+        print(f"\tdelta = {self.delta}")
+        print(f"\tinitial phase size = {self._initial_phase_size}")
+        print(f"\ttotal time = {self.total_time}")
 
     def _compute_z(self) -> float:
         scaled_cap = (self.delta * self.p.get_capacity() +
@@ -63,12 +64,10 @@ class OnlineSolver:
     def _choose_index_to_pack(self, available_values: List[float],
                               available_costs: List[List[float]]) -> int:
         if self.current_time <= self._initial_phase_size:
-            return max(enumerate(available_values), key=itemgetter(1))[0]
-            # return random.randint(0, len(available_values)-1)
+            return random.randint(0, len(available_values)-1)
         else:
             if self.z is None:
                 self.z = self._compute_z()
-                print(f"z set to {self.z}")
             evaluated_options = [available_values[i]
                                  - self.z * helper.dot_product(self.theta.get_probs(), available_costs[i])
                                  for i in range(len(available_values))]
@@ -95,3 +94,15 @@ class OnlineSolver:
         s.solve()
         self.optimum_value = s.optimum_value
         return s.optimum_value
+
+    def print_result(self) -> None:
+        pass
+
+    def get_premises_min(self) -> float:
+        return log(self.p.get_cost_dimension()) / (self.e*self.e)
+
+    def respect_premises(self) -> bool:
+        if min(self.optimum_value, self.p.get_capacity()) + 1e-6 < self.get_premises_min():
+            return False
+        else:
+            return True

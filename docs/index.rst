@@ -10,6 +10,7 @@ Welcome to Online Packing's documentation!
    mwu_max
    offline_solvers
    packing_problem
+   instance_generator
 
 Indices and tables
 ==================
