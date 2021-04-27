@@ -1,0 +1,268 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="Online Solver Module" href="packing_problem.html" />
+
+    <meta name="generator" content="sphinx-3.5.4, furo 2021.04.11.beta34"/>
+        <title>Instance Generator Module - Online Packing</title>
+      <link rel="stylesheet" href="_static/styles/furo.css?digest=59ab60ac09ea94ccfe6deddff6d715cce948a6fc">
+    <link rel="stylesheet" href="_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">Online Packing</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">Online Packing</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="online_solver.html">Packing Problem Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="helper.html">Helper Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mwu_max.html">MWU-Max Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="offline_solvers.html">Offline Solvers Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packing_problem.html">Online Solver Module</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Instance Generator Module</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="module-instance_generator.generator">
+<span id="instance-generator-module"></span><h1>Instance Generator Module<a class="headerlink" href="#module-instance_generator.generator" title="Permalink to this headline">¶</a></h1>
+<p>This module helps with generation of instances for our problem.</p>
+<dl class="py function">
+<dt id="instance_generator.generator.generate_random_instance">
+<code class="sig-prename descclassname"><span class="pre">instance_generator.generator.</span></code><code class="sig-name descname"><span class="pre">generate_random_instance</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_instants</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_dim</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items_per_instant</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mandatory_packing</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> → <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/instance_generator/generator.html#generate_random_instance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instance_generator.generator.generate_random_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates random values, costs and capacity for a Packing Problem instance.
+Instances generated here may not respect guarantees constraints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>n_instants</strong><span class="classifier">int</span></dt><dd><p>Number of instants to be generated.</p>
+</dd>
+<dt><strong>cost_dim</strong><span class="classifier">int</span></dt><dd><p>Dimension of the cost vectors to be generated.</p>
+</dd>
+<dt><strong>items_per_instant</strong><span class="classifier">int</span></dt><dd><p>Number of items that should be available in each instant.</p>
+</dd>
+<dt><strong>mandatory_packing</strong><span class="classifier">bool</span></dt><dd><p>If instance should enforce the need to always pack an item in every instant.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>values</strong><span class="classifier">list of list of float</span></dt><dd><p>A list containing, for each instant, a list with that instant item’s values.</p>
+</dd>
+<dt><strong>costs</strong><span class="classifier">list of list of list of float</span></dt><dd><p>A list containing, for each instant, a list with that instant item’s cost vectors.</p>
+</dd>
+<dt><strong>cap</strong><span class="classifier">float</span></dt><dd><p>A random problem capacity.</p>
+</dd>
+<dt><strong>e</strong><span class="classifier">float</span></dt><dd><p>The best theorical epsilon for the generated problem.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Setting <code class="docutils literal notranslate"><span class="pre">mandatory_packing=False</span></code> will cause this function to add, for each instant,
+an extra item with <span class="math notranslate nohighlight">\(value = 0\)</span> and <span class="math notranslate nohighlight">\(cost = 0\)</span> for every dimension, allowing
+the player to pack that item when he wants to “do nothing” in some instant.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="instance_generator.generator.generate_valid_instance">
+<code class="sig-prename descclassname"><span class="pre">instance_generator.generator.</span></code><code class="sig-name descname"><span class="pre">generate_valid_instance</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_delta</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_instants</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_dim</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items_per_instant</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mandatory_packing</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> → <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/instance_generator/generator.html#generate_valid_instance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instance_generator.generator.generate_valid_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates values for a problem instance that respect guarantees premises,
+thus, theoric guarantees should be valid (see Notes section below).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>target_delta</strong><span class="classifier">float</span></dt><dd><p>Capacity will be set with the constraint that delta &lt;= <cite>target_delta</cite>.</p>
+</dd>
+<dt><strong>n_instants</strong><span class="classifier">int</span></dt><dd><p>Number of instants to be generated.</p>
+</dd>
+<dt><strong>cost_dim</strong><span class="classifier">int</span></dt><dd><p>Dimension of the cost vectors to be generated.</p>
+</dd>
+<dt><strong>items_per_instant</strong><span class="classifier">int</span></dt><dd><p>Number of items that should be available in each instant.</p>
+</dd>
+<dt><strong>mandatory_packing</strong><span class="classifier">bool</span></dt><dd><p>If instance should enforce the need to always pack an item in every instant.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>values</strong><span class="classifier">list of list of float</span></dt><dd><p>A list containing, for each instant, a list with that instant item’s values.</p>
+</dd>
+<dt><strong>costs</strong><span class="classifier">list of list of list of float</span></dt><dd><p>A list containing, for each instant, a list with that instant item’s cost vectors.</p>
+</dd>
+<dt><strong>cap</strong><span class="classifier">float</span></dt><dd><p>A random problem capacity.</p>
+</dd>
+<dt><strong>e</strong><span class="classifier">float</span></dt><dd><p>The best theorical epsilon for the generated problem.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Setting <code class="docutils literal notranslate"><span class="pre">mandatory_packing=False</span></code> will cause this function to add, for each instant,
+an extra item with <span class="math notranslate nohighlight">\(value = 0\)</span> and <span class="math notranslate nohighlight">\(cost = 0\)</span> for every dimension, allowing
+the player to pack that item when he wants to “do nothing” in some instant.</p>
+<p><cite>target_delta</cite> should be calibrated relative to <cite>n_instants</cite>. Setting a <cite>target_delta</cite>
+too low can cause the <span class="math notranslate nohighlight">\(optimum\_value\_sum \geq \log d / \epsilon^2\)</span> premise to be violated.
+Setting <cite>target_delta</cite> too high is not ideal since the algorithm chooses the items randomly in the first
+<cite>target_delta</cite> fraction of instants.</p>
+<p>The only premise that is guaranteed here is that <span class="math notranslate nohighlight">\(cap \geq \log d / \epsilon^2\)</span>. The
+<span class="math notranslate nohighlight">\(optimum\_value\_sum \geq \log d / \epsilon^2\)</span> premise is not asserted since it would
+require solving the instance to find <cite>optimum_value_sum</cite>, making this function slow. Setting
+a higher <cite>target_delta</cite> will increase the chance that this premise is valid.</p>
+</dd></dl>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          
+          <a class="prev-page" href="packing_problem.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Online Solver Module</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, David
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="_sources/instance_generator.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </main>
+</div>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
+</html>

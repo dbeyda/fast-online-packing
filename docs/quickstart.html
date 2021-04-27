@@ -1,0 +1,301 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Packing Problem Module" href="online_solver.html" /><link rel="prev" title="Install" href="install.html" />
+
+    <meta name="generator" content="sphinx-3.5.4, furo 2021.04.11.beta34"/>
+        <title>Quickstart - Online Packing</title>
+      <link rel="stylesheet" href="_static/styles/furo.css?digest=59ab60ac09ea94ccfe6deddff6d715cce948a6fc">
+    <link rel="stylesheet" href="_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">Online Packing</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">Online Packing</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="online_solver.html">Packing Problem Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="helper.html">Helper Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mwu_max.html">MWU-Max Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="offline_solvers.html">Offline Solvers Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packing_problem.html">Online Solver Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instance_generator.html">Instance Generator Module</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<p>First, we start by importing our <cite>generator</cite>, that will
+generate example instances for us, and the <cite>OnlineSolver</cite>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">online_packing.instance_generator</span> <span class="kn">import</span> <span class="n">generator</span>
+<span class="kn">from</span> <span class="nn">online_packing.online_solver</span> <span class="kn">import</span> <span class="n">OnlineSolver</span>
+
+<span class="n">n_instants</span> <span class="o">=</span> <span class="mi">400</span>
+<span class="n">cost_dim</span> <span class="o">=</span> <span class="mi">5</span>
+</pre></div>
+</div>
+<p>We also set the total number of instants (rounds) to 400,
+and the cost dimension to 5. This means our cost vectors will have
+a length of 5.</p>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<p>Ok. Lets generate an example of the Packing LP problem, and then feed it
+to the solver.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">delta</span> <span class="o">=</span> <span class="mf">0.3</span>
+<span class="n">values</span><span class="p">,</span> <span class="n">costs</span><span class="p">,</span> <span class="n">cap</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">generate_valid_instance</span><span class="p">(</span>
+    <span class="n">delta</span><span class="p">,</span> <span class="n">n_instants</span><span class="p">,</span> <span class="n">cost_dim</span><span class="p">,</span> <span class="n">items_per_instant</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">mandatory_packing</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">OnlineSolver</span><span class="p">(</span><span class="n">cost_dim</span><span class="p">,</span> <span class="n">n_instants</span><span class="p">,</span> <span class="n">cap</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>On the example generation, notice the following:</p>
+<ul class="simple">
+<li><p><cite>items_per_instant = 3</cite>: this means on each instant or round, there will be 3 options available for the user/algorithm to choose from.</p></li>
+<li><p><cite>mandatory_packing = False</cite>: this makes the generator add an extra item next to the 3 preivous options. This item will have value 0 and cost 0, allowing to user/algorithm to choose it when it decides to “not choose any item”.</p></li>
+</ul>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<p>Great! Now lets solve the instance in an online fashion:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">&gt;&gt; Online solver parameters:"</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">print_params</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="c1"># play the game, round by round</span>
+<span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">costs</span><span class="p">):</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">pack_one</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+
+<span class="c1"># check and compare against the offline optimum</span>
+<span class="n">s</span><span class="o">.</span><span class="n">compute_optimum</span><span class="p">()</span>
+<span class="n">s</span><span class="o">.</span><span class="n">print_result</span><span class="p">()</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="o">.</span><span class="n">respect_premises</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">! OBS ! constrains violated."</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The output should be similary to:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Online solver parameters:
+capacity = 285
+cost dimension = 5
+e = 0.07514752537472016
+delta = 0.2998953403788148
+initial phase size = 120
+total time = 400
+
+
+Opt: 298.1102216801745
+Alg: 249.78456377970605
+Score Alg = 0.838 * Opt
+    min {B, TOPT} = 285.000
+    B = 285
+    TOPT = 298.1102216801745
+</pre></div>
+</div>
+<p>Wow! Take a look at that! We used 30% of the instants to estimate algorithm
+parameters (Z), choosing randomly at those instants, and still managed to make
+83.4% of the optimum in an online way! Very impressive.</p>
+<p>Thanks to Agrawal and Devanur’s “Fast Algorithms for Online Stochastic Convex Programming”!</p>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<p><strong>Disclaimer about theoretical guarantees</strong>: It is possible that some of the premises for the algorithm are violated.
+In that case, the excelent theoretical guarantees we counted on here are not valid.
+That’s what the last lines of the code and output are for. Sadly, one of the premises
+depends on the offline optimum, meaning we can only find out if the algorithm fulfilled
+it’s premises <em>after</em> we end all the rounds, because this check will require us to
+compute the offline optimum.</p>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<p>Everything together now:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">online_packing.instance_generator</span> <span class="kn">import</span> <span class="n">generator</span>
+<span class="kn">from</span> <span class="nn">online_packing.online_solver</span> <span class="kn">import</span> <span class="n">OnlineSolver</span>
+
+<span class="n">n_instants</span> <span class="o">=</span> <span class="mi">400</span>
+<span class="n">cost_dim</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="n">values</span><span class="p">,</span> <span class="n">costs</span><span class="p">,</span> <span class="n">cap</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">generate_valid_instance</span><span class="p">(</span>
+    <span class="mf">0.3</span><span class="p">,</span> <span class="n">n_instants</span><span class="p">,</span> <span class="n">cost_dim</span><span class="p">,</span> <span class="n">items_per_instant</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">mandatory_packing</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">OnlineSolver</span><span class="p">(</span><span class="n">cost_dim</span><span class="p">,</span> <span class="n">n_instants</span><span class="p">,</span> <span class="n">cap</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">PythonMIPSolver</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">&gt;&gt; Online solver parameters:"</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">print_params</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">costs</span><span class="p">):</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">pack_one</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+
+<span class="n">s</span><span class="o">.</span><span class="n">compute_optimum</span><span class="p">()</span>
+<span class="n">s</span><span class="o">.</span><span class="n">print_result</span><span class="p">()</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="o">.</span><span class="n">respect_premises</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">! OBS ! constrains violated."</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="online_solver.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Packing Problem Module</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="install.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Install</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, David
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="_sources/quickstart.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </main>
+</div>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
+</html>

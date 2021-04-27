@@ -1,0 +1,469 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Online Solver Module" href="packing_problem.html" /><link rel="prev" title="MWU-Max Module" href="mwu_max.html" />
+
+    <meta name="generator" content="sphinx-3.5.4, furo 2021.04.11.beta34"/>
+        <title>Offline Solvers Module - Online Packing</title>
+      <link rel="stylesheet" href="_static/styles/furo.css?digest=59ab60ac09ea94ccfe6deddff6d715cce948a6fc">
+    <link rel="stylesheet" href="_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">Online Packing</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">Online Packing</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="online_solver.html">Packing Problem Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="helper.html">Helper Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mwu_max.html">MWU-Max Module</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Offline Solvers Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packing_problem.html">Online Solver Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instance_generator.html">Instance Generator Module</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="offline-solvers-module">
+<h1>Offline Solvers Module<a class="headerlink" href="#offline-solvers-module" title="Permalink to this headline">¶</a></h1>
+<p>Available solvers for the Offline Packing LP Problem, already adapted
+to work with the provided Online Solvers.</p>
+<div class="section" id="note">
+<h2>Note<a class="headerlink" href="#note" title="Permalink to this headline">¶</a></h2>
+<p>We recommend the <cite>python_mip_solver.PythonMIPSolver</cite> since it’s more flexible
+and usually faster.</p>
+</div>
+<div class="section" id="module-offline_solvers.base_solver">
+<span id="base-solver"></span><h2>Base Solver<a class="headerlink" href="#module-offline_solvers.base_solver" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="offline_solvers.base_solver.BaseSolver">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">offline_solvers.base_solver.</span></code><code class="sig-name descname"><span class="pre">BaseSolver</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">costs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/offline_solvers/base_solver.html#BaseSolver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#offline_solvers.base_solver.BaseSolver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract class unifying methods for the offline solvers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>values</strong><span class="classifier">list of list of (int or float)</span></dt><dd><p>A list of instants, where each instant contains is a list of the available values of that instant.</p>
+</dd>
+<dt><strong>costs</strong><span class="classifier">list of list of list of (int or float)</span></dt><dd><p>A list of instants, where each instant is a list of options available, and each option
+is a list containing this option’s costs for each dimension.</p>
+</dd>
+<dt><strong>capacity</strong><span class="classifier">float</span></dt><dd><p>The capacity of each dimension (each dimension have the same capacity).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>optimum_value</strong><span class="classifier">float or int</span></dt><dd><p>The optimum value found for the LP problem.</p>
+</dd>
+<dt><strong>packed_items</strong><span class="classifier">list of int</span></dt><dd><p>A list containing the indexes of the items chosen in each instant.</p>
+</dd>
+<dt><strong>packed_weight_sum</strong><span class="classifier">list of float</span></dt><dd><p>A list containing the optimal solution’s total cost for each dimension.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<div class="table-wrapper"><table class="docutils align-default">
+<colgroup>
+<col style="width: 17%"/>
+<col style="width: 83%"/>
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>solve()</strong></p></td>
+<td><p>Abstract method, should solve the LP problem.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>print_result()</strong></p></td>
+<td><p>Prints a report containing the optimum solution and the total weights in each dimension.</p></td>
+</tr>
+</tbody>
+</table></div>
+<dl class="py method">
+<dt id="offline_solvers.base_solver.BaseSolver.print_result">
+<code class="sig-name descname"><span class="pre">print_result</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> → <span class="pre">None</span><a class="reference internal" href="_modules/offline_solvers/base_solver.html#BaseSolver.print_result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#offline_solvers.base_solver.BaseSolver.print_result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints a report containing the optimum solution
+and the total weights in each dimension</p>
+</dd></dl>
+<dl class="py method">
+<dt id="offline_solvers.base_solver.BaseSolver.solve">
+<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">solve</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> → <span class="pre">None</span><a class="reference internal" href="_modules/offline_solvers/base_solver.html#BaseSolver.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#offline_solvers.base_solver.BaseSolver.solve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract method that should solve the LP problem and set
+<cite>optimum_value</cite>, <cite>packed_items</cite> and <cite>packed_weight_sum</cite> attributes.</p>
+</dd></dl>
+</dd></dl>
+</div>
+<div class="section" id="module-offline_solvers.google_knapsack_solver">
+<span id="google-knapsack-solver"></span><h2>Google Knapsack Solver<a class="headerlink" href="#module-offline_solvers.google_knapsack_solver" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="offline_solvers.google_knapsack_solver.GoogleKnapsackSolver">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">offline_solvers.google_knapsack_solver.</span></code><code class="sig-name descname"><span class="pre">GoogleKnapsackSolver</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">costs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decimal_places</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">6</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/offline_solvers/google_knapsack_solver.html#GoogleKnapsackSolver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#offline_solvers.google_knapsack_solver.GoogleKnapsackSolver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Google OR-Tools solver for the multi-dimensional Knapsack
+problem using integer values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>values</strong></dt><dd><p>Refer to the BaseSolver parameters.</p>
+</dd>
+<dt><strong>costs</strong></dt><dd><p>Refer to the BaseSolver parameters.</p>
+</dd>
+<dt><strong>capacity</strong></dt><dd><p>Refer to the BaseSolver parameters.</p>
+</dd>
+<dt><strong>decimal_places</strong><span class="classifier">int</span></dt><dd><p>Decimal precision used to scale floats in values and costs into integers.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The google solver used here does not accept floating point numbers, as it considers the
+problem as a discrete one. Thus, we multiply every value, cost and capacity by
+<span class="math notranslate nohighlight">\(10^n\)</span> where <span class="math notranslate nohighlight">\(n\)</span> is <cite>decimal_places</cite>.</p>
+<p><em>Validity Conditions:</em>
+Also, there are variantions of the packing problem. Some allow the algorithm
+to do nothing, not packing any item, in an instant. Some compel the algorithm
+to make a choice in every instant. The google solver only accepts instances
+where it is not required to pack an item in every instant. This solver also only
+accepts instances where there is only one item available per instant.</p>
+<p>Read more about the <a class="reference external" href="https://developers.google.com/optimization/bin/knapsack">Google OR-Tools Knapsack Solver</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>optimum_value</strong><span class="classifier">float or int</span></dt><dd><p>The optimum value found for the LP problem.</p>
+</dd>
+<dt><strong>packed_items</strong><span class="classifier">list of int</span></dt><dd><p>A list containing the indexes of the items chosen in each instant.</p>
+</dd>
+<dt><strong>packed_weight_sum</strong><span class="classifier">list of float</span></dt><dd><p>A list containing the optimal solution’s total cost for each dimension.</p>
+</dd>
+<dt><strong>solver</strong></dt><dd><p>The instance of the used OR-Tools <cite>pywrapknapsack_solver.KnapsackSolver</cite> solver.</p>
+</dd>
+<dt><strong>adapted_values</strong><span class="classifier">list of int</span></dt><dd><p><cite>values</cite> scaled into an integer using <cite>decimal_places</cite> decimal places as precision.</p>
+</dd>
+<dt><strong>adapted_costs</strong><span class="classifier">list of list of int</span></dt><dd><p><cite>costs</cite> scaled into an integer using <cite>decimal_places</cite> decimal places as precision.</p>
+</dd>
+<dt><strong>adapted_capacity</strong><span class="classifier">list of int</span></dt><dd><p>A list with, for every cost dimension, the same <cite>capacity</cite> scaled into an integer using
+<cite>decimal_places</cite> decimal places as precision.</p>
+</dd>
+<dt><strong>decimal_places</strong><span class="classifier">int</span></dt><dd><p>Decimal precision used to scale floats in <cite>values</cite> and <cite>costs</cite> into integers.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<div class="table-wrapper"><table class="docutils align-default">
+<colgroup>
+<col style="width: 36%"/>
+<col style="width: 64%"/>
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>solve()</strong></p></td>
+<td><p>Solves the LP problem.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>print_result()</strong></p></td>
+<td><p>Inherited from BaseSolver.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>validate_instance(values, costs)</strong></p></td>
+<td><p>Check if an offline packing LP instance is valid for this solver.</p></td>
+</tr>
+</tbody>
+</table></div>
+<dl class="py method">
+<dt id="offline_solvers.google_knapsack_solver.GoogleKnapsackSolver.solve">
+<code class="sig-name descname"><span class="pre">solve</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/offline_solvers/google_knapsack_solver.html#GoogleKnapsackSolver.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#offline_solvers.google_knapsack_solver.GoogleKnapsackSolver.solve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Try to solve the LP problem and sets <cite>optimum_value</cite>, <cite>packed_items</cite>
+and <cite>packed_weight_sum</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>None</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="offline_solvers.google_knapsack_solver.GoogleKnapsackSolver.validate_instance">
+<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">validate_instance</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">costs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> → <span class="pre">None</span><a class="reference internal" href="_modules/offline_solvers/google_knapsack_solver.html#GoogleKnapsackSolver.validate_instance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#offline_solvers.google_knapsack_solver.GoogleKnapsackSolver.validate_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a given instance is valid for this solver. Refer to the
+<em>Notes</em> to check validity conditions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>values</strong></dt><dd><p>Values for the instance. For format, refer to BaseSolver parameters.</p>
+</dd>
+<dt><strong>costs</strong></dt><dd><p>Costs for the instance. For format, refer to BaseSolver parameters.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>None</dt><dd></dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>Exception</dt><dd><p>If problem instance is not valid.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+</div>
+<div class="section" id="module-offline_solvers.python_mip_solver">
+<span id="python-mip-solver"></span><h2>Python-MIP Solver<a class="headerlink" href="#module-offline_solvers.python_mip_solver" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="offline_solvers.python_mip_solver.PythonMIPSolver">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">offline_solvers.python_mip_solver.</span></code><code class="sig-name descname"><span class="pre">PythonMIPSolver</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">costs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_seconds</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/offline_solvers/python_mip_solver.html#PythonMIPSolver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#offline_solvers.python_mip_solver.PythonMIPSolver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Python-MIP Solver, used to model and solve the offline Packing LP Problem,
+using a COIN-OR Branch and Cut (CBC) solver.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>values</strong></dt><dd><p>Refer to the BaseSolver parameters.</p>
+</dd>
+<dt><strong>costs</strong></dt><dd><p>Refer to the BaseSolver parameters.</p>
+</dd>
+<dt><strong>capacity</strong></dt><dd><p>Refer to the BaseSolver parameters.</p>
+</dd>
+<dt><strong>max_seconds</strong><span class="classifier">int, default=30</span></dt><dd><p>Maximum time spent searching for better solutions, in seconds.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This is a Mixed Integer Programming modeler and solver, being much more flexible than
+the Google Knapsack Solver, accepting all types of variantions of the problem: more than one
+item per instant, obligatory packing or flexible packing.</p>
+<p>Read more about the <a class="reference external" href="https://docs.python-mip.com/en/latest/index.html">Python-MIP Solver</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>optimum_value</strong><span class="classifier">float or int</span></dt><dd><p>The optimum value found for the LP problem.</p>
+</dd>
+<dt><strong>packed_items</strong><span class="classifier">list of int</span></dt><dd><p>A list containing the indexes of the items chosen in each instant.</p>
+</dd>
+<dt><strong>packed_weight_sum</strong><span class="classifier">list of float</span></dt><dd><p>A list containing the optimal solution’s total cost for each dimension.</p>
+</dd>
+<dt><strong>solver</strong></dt><dd><p>The instance of the Python-MIP solver.</p>
+</dd>
+<dt><strong>max_seconds</strong><span class="classifier">int</span></dt><dd><p>Maximum time spent searching for better solutions, in seconds.</p>
+</dd>
+<dt><strong>status</strong><span class="classifier">{mip.OptimizationStatus.OPTIMAL, mip.OptimizationStatus.FEASIBLE,               mip.OptimizationStatus.INFEASIBLE}</span></dt><dd><p>Result of the optimization procedure.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<div class="table-wrapper"><table class="docutils align-default">
+<colgroup>
+<col style="width: 41%"/>
+<col style="width: 59%"/>
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>solve()</strong></p></td>
+<td><p>Solves the LP problem.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>print_result()</strong></p></td>
+<td><p>Inherited from BaseSolver.</p></td>
+</tr>
+</tbody>
+</table></div>
+<dl class="py method">
+<dt id="offline_solvers.python_mip_solver.PythonMIPSolver.solve">
+<code class="sig-name descname"><span class="pre">solve</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/offline_solvers/python_mip_solver.html#PythonMIPSolver.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#offline_solvers.python_mip_solver.PythonMIPSolver.solve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solves the optimization problem and sets <cite>status</cite>, <cite>optimum_value</cite>,
+<cite>packed_items</cite> and <cite>packed_weight_sum</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>None</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="packing_problem.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Online Solver Module</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="mwu_max.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">MWU-Max Module</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, David
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="_sources/offline_solvers.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Offline Solvers Module</a><ul>
+<li><a class="reference internal" href="#note">Note</a></li>
+<li><a class="reference internal" href="#module-offline_solvers.base_solver">Base Solver</a></li>
+<li><a class="reference internal" href="#module-offline_solvers.google_knapsack_solver">Google Knapsack Solver</a></li>
+<li><a class="reference internal" href="#module-offline_solvers.python_mip_solver">Python-MIP Solver</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </main>
+</div>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
+</html>
