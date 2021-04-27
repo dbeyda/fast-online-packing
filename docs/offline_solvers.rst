@@ -1,6 +1,12 @@
 Offline Solvers Module
 ==========================================
-Solvers for the Offline Packing LP Problem.
+Available solvers for the Offline Packing LP Problem, already adapted
+to work with the provided Online Solvers.
+
+Note
+----
+We recommend the `python_mip_solver.PythonMIPSolver` since it's more flexible
+and usually faster.
 
 Base Solver
 -----------

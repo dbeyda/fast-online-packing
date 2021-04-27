@@ -6,6 +6,7 @@ Welcome to Online Packing's documentation!
    :maxdepth: 2
    :caption: Table of Contents
 
+   online_solver
    helper
    mwu_max
    offline_solvers
