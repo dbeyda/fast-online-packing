@@ -129,12 +129,12 @@ class OnlineSolver:
     def print_params(self):
         """Print algorithm parameters.
         """
-        print(f"\tcapacity = {self.p.get_capacity()}")
-        print(f"\tcost dimension = {self.cost_dimension}")
-        print(f"\te = {self.e}")
-        print(f"\tdelta = {self.delta}")
-        print(f"\tinitial phase size = {self._initial_phase_size}")
-        print(f"\ttotal time = {self.total_time}")
+        print(f"capacity = {self.p.get_capacity()}")
+        print(f"cost dimension = {self.cost_dimension}")
+        print(f"e = {self.e}")
+        print(f"delta = {self.delta}")
+        print(f"initial phase size = {self._initial_phase_size}")
+        print(f"total time = {self.total_time}")
 
     def _compute_z(self) -> float:
         """Compute Z, by solving a scaled offline problem described in the paper's apendix.
@@ -230,10 +230,10 @@ class OnlineSolver:
     def print_result(self) -> None:
         """Print usefull information about the algorithm execution.
         """
-        print(f"> Opt: {self.optimum_value}")
-        print(f"> Alg: {self.p._packed_value_sum}")  # type: ignore
+        print(f"Opt: {self.optimum_value}")
+        print(f"Alg: {self.p._packed_value_sum}")  # type: ignore
         print(f"Score Alg = {self.p._packed_value_sum/self.optimum_value :.3f} * Opt")  # type: ignore
-        print(f"     min {{B, TOPT}} = {self.get_premises_min()}")
+        print(f"     min {{B, TOPT}} = {self.get_premises_min():.3f}")
         print(f"     B = {self.p.get_capacity()}")
         print(f"     TOPT = {self.optimum_value}")
 
