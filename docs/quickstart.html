@@ -225,8 +225,9 @@ compute the offline optimum.</p>
 <span class="n">n_instants</span> <span class="o">=</span> <span class="mi">400</span>
 <span class="n">cost_dim</span> <span class="o">=</span> <span class="mi">5</span>
 
+<span class="n">delta</span> <span class="o">=</span> <span class="mf">0.3</span>
 <span class="n">values</span><span class="p">,</span> <span class="n">costs</span><span class="p">,</span> <span class="n">cap</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">generate_valid_instance</span><span class="p">(</span>
-    <span class="mf">0.3</span><span class="p">,</span> <span class="n">n_instants</span><span class="p">,</span> <span class="n">cost_dim</span><span class="p">,</span> <span class="n">items_per_instant</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">mandatory_packing</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">delta</span><span class="p">,</span> <span class="n">n_instants</span><span class="p">,</span> <span class="n">cost_dim</span><span class="p">,</span> <span class="n">items_per_instant</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">mandatory_packing</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="n">s</span> <span class="o">=</span> <span class="n">OnlineSolver</span><span class="p">(</span><span class="n">cost_dim</span><span class="p">,</span> <span class="n">n_instants</span><span class="p">,</span> <span class="n">cap</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">PythonMIPSolver</span><span class="p">)</span>
 

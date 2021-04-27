@@ -103,8 +103,9 @@ Everything together now:
     n_instants = 400
     cost_dim = 5
 
+    delta = 0.3
     values, costs, cap, e = generator.generate_valid_instance(
-        0.3, n_instants, cost_dim, items_per_instant=3, mandatory_packing=False)
+        delta, n_instants, cost_dim, items_per_instant=3, mandatory_packing=False)
 
     s = OnlineSolver(cost_dim, n_instants, cap, e, PythonMIPSolver)
 
