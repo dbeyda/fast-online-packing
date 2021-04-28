@@ -1,20 +1,55 @@
-# import pytest
-# from online_packing.online_solver import OnlineSolver
+from online_packing.online_solver import OnlineSolver
+from test_data import instance_valid_premises, instance_violated_premises
+
+valid = instance_valid_premises
+violated = instance_violated_premises
 
 
-# class TestMwuMax():
-#     def test_zero_experts(self):
-#         with pytest.raises(Exception):
-#             MwuMax(0, 0.1)
+class TestOnlineSolver():
+    def test_pack_one(self):
+        s = OnlineSolver(valid["cost_dim"], valid["n_instants"], valid["cap"], valid["e"])
+        for v, c in zip(valid["values"], valid["costs"]):
+            s.pack_one(v, c)
 
-#     def test_negative_experts(self):
-#         with pytest.raises(Exception):
-#             MwuMax(-2, 0.1)
+        ss = OnlineSolver(violated["cost_dim"], violated["n_instants"], violated["cap"], violated["e"])
+        for v, c in zip(violated["values"], violated["costs"]):
+            ss.pack_one(v, c)
 
-#     def test_eps_inferior_range(self):
-#         with pytest.raises(Exception):
-#             MwuMax(3, 0)
+    def test_compute_optimum(self):
+        s = OnlineSolver(valid["cost_dim"], valid["n_instants"], valid["cap"], valid["e"])
+        for v, c in zip(valid["values"], valid["costs"]):
+            s.pack_one(v, c)
+        s.compute_optimum()
 
-#     def test_eps_superior_range(self):
-#         with pytest.raises(Exception):
-#             MwuMax(3, 0.6)
+        ss = OnlineSolver(violated["cost_dim"], violated["n_instants"], violated["cap"], violated["e"])
+        for v, c in zip(violated["values"], violated["costs"]):
+            ss.pack_one(v, c)
+        ss.compute_optimum()
+
+    def test_get_premises_min(self):
+        s = OnlineSolver(valid["cost_dim"], valid["n_instants"], valid["cap"], valid["e"])
+        for v, c in zip(valid["values"], valid["costs"]):
+            s.pack_one(v, c)
+        s.compute_optimum()
+        assert s.get_premises_min() < valid["premises_min"]+0.1
+        assert s.get_premises_min() > valid["premises_min"]-0.1
+
+        ss = OnlineSolver(violated["cost_dim"], violated["n_instants"], violated["cap"], violated["e"])
+        for v, c in zip(violated["values"], violated["costs"]):
+            ss.pack_one(v, c)
+        ss.compute_optimum()
+        assert ss.get_premises_min() < violated["premises_min"]+0.1
+        assert ss.get_premises_min() > violated["premises_min"]-0.1
+
+    def test_respect_premises(self):
+        s = OnlineSolver(valid["cost_dim"], valid["n_instants"], valid["cap"], valid["e"])
+        for v, c in zip(valid["values"], valid["costs"]):
+            s.pack_one(v, c)
+        s.compute_optimum()
+        assert s.respect_premises() is True
+
+        ss = OnlineSolver(violated["cost_dim"], violated["n_instants"], violated["cap"], violated["e"])
+        for v, c in zip(violated["values"], violated["costs"]):
+            ss.pack_one(v, c)
+        ss.compute_optimum()
+        assert ss.respect_premises() is False
