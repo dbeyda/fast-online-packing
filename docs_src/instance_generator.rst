@@ -1,4 +1,4 @@
 Instance Generator Module
 ==========================================
-.. automodule:: instance_generator.generator
+.. automodule:: instance_generator
    :members:

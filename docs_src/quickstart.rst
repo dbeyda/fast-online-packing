@@ -8,7 +8,7 @@ generate example instances for us, and the `OnlineSolver`.
 
 .. code-block:: python
 
-    from online_packing.instance_generator import generator
+    from online_packing import instance_generator as generator
     from online_packing.online_solver import OnlineSolver
 
     n_instants = 400
@@ -27,14 +27,13 @@ to the solver.
 
     delta = 0.3
     values, costs, cap, e = generator.generate_valid_instance(
-        delta, n_instants, cost_dim, items_per_instant=3, mandatory_packing=False)
+        delta, n_instants, cost_dim, items_per_instant=3)
 
     s = OnlineSolver(cost_dim, n_instants, cap, e)
 
 On the example generation, notice the following:
 
 - `items_per_instant = 3`: this means on each instant or round, there will be 3 options available for the user/algorithm to choose from.
-- `mandatory_packing = False`: this makes the generator add an extra item next to the 3 preivous options. This item will have value 0 and cost 0, allowing to user/algorithm to choose it when it decides to "not choose any item".
 
 |
 
@@ -93,11 +92,11 @@ compute the offline optimum.
 
 |
 
-Everything together now:
+Full code below:
 
 .. code-block:: python
 
-    from online_packing.instance_generator import generator
+    from online_packing import instance_generator as generator
     from online_packing.online_solver import OnlineSolver
 
     n_instants = 400
@@ -105,7 +104,7 @@ Everything together now:
 
     delta = 0.3
     values, costs, cap, e = generator.generate_valid_instance(
-        delta, n_instants, cost_dim, items_per_instant=3, mandatory_packing=False)
+        delta, n_instants, cost_dim, items_per_instant=3)
 
     s = OnlineSolver(cost_dim, n_instants, cap, e, PythonMIPSolver)
 

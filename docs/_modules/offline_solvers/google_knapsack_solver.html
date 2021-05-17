@@ -187,6 +187,8 @@
 <span class="sd">    problem as a discrete one. Thus, we multiply every value, cost and capacity by</span>
 <span class="sd">    :math:`10^n` where :math:`n` is `decimal_places`.</span>
 
+<span class="sd">    Also, this solver only accepts one item options per instant.</span>
+
 <span class="sd">    *Validity Conditions:*</span>
 <span class="sd">    Also, there are variantions of the packing problem. Some allow the algorithm</span>
 <span class="sd">    to do nothing, not packing any item, in an instant. Some compel the algorithm</span>
@@ -239,12 +241,9 @@
 <span class="sd">        Exception</span>
 <span class="sd">            If problem instance is not valid.</span>
 <span class="sd">        """</span>
-        <span class="k">for</span> <span class="n">value_options</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
-            <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">value_options</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"Each day should have two value options: a real one, and a 0 one."</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">cost_options</span> <span class="ow">in</span> <span class="n">costs</span><span class="p">:</span>
-            <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cost_options</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"Each day should have two cost options: a real one, and a 0 one."</span><span class="p">)</span></div>
+        <span class="k">for</span> <span class="n">value_options</span><span class="p">,</span> <span class="n">cost_options</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">costs</span><span class="p">):</span>
+            <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">value_options</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">cost_options</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"GoogleKnapspackSolver only works with one item per instant."</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_adapter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
         <span class="sd">"""Adapts instance values from floats into integers.</span>
@@ -277,15 +276,14 @@
 <span class="sd">        """</span>
         <span class="n">factor</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">decimal_places</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">optimum_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">Solve</span><span class="p">()</span> <span class="o">/</span> <span class="n">factor</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">packed_items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">packed_items</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_size</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adapted_values</span><span class="p">)):</span>
-            <span class="c1"># if item was packed it was first option of the instant</span>
-            <span class="c1"># if item was not packed, second option is packing nothing</span>
-            <span class="n">packed_idx</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">BestSolutionContains</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">else</span> <span class="mi">1</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">packed_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">packed_idx</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cost_dimension</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">packed_weight_sum</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_costs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">packed_idx</span><span class="p">][</span><span class="n">dim</span><span class="p">]</span></div></div>
+            <span class="c1"># if item was packed it was first option of the instant, meaning index 0</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">BestSolutionContains</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">packed_items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cost_dimension</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">packed_weight_sum</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_costs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">dim</span><span class="p">]</span></div></div>
 </pre></div>
       </article>
       <footer>

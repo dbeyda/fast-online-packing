@@ -18,27 +18,27 @@ to pack (0-1 Knapsack Problem). Ok?
 but the items cost is now a vector, meaning the cost has more than one dimension.
 You can interpret this as "the backpack is 2D now", or as two separate restrictions:
 one for the weight, another on the item prices, because your budget is limited.
-Notice the cost vector can have any positive number of dimensions.
+Notice the cost vector can have any positive number of dimensions, but it's still a vector.
 
 **What about the Online part?** A problem is called online when you have limited information about
 the problem and you have to make a choice using only the little information you have. In the
-future, more information will be revealed, you will be asked to make more choices, but past choices cannot be changed.
+future, more information will be revealed, you will be asked to make other choices, but past choices cannot be changed.
 
-**All together now**. The problem develops in rounds. On each round, you will be
-presented `k` items (each one has a value and a cost vector). You have to choose
-exactly one item to pack. You have a capacity `B` in every cost dimension. The
-objective is to maximize the packed value, without exceeding the capacity `B` in
+**The complete picture**. The problem develops in rounds. On each round, you will be
+presented `k` items (each one has a value and a cost vector). You have to choose if you want
+to pack an item, and which one do you want to pack. You have a capacity `B` in every cost dimension.
+The objective is to maximize the packed value, without exceeding the capacity `B` in
 any dimension.
 
 The online problem is harder because the user can not see all the items beforehand,
-like in the offline problem. The items are presented as the game develops. Thats why
+like in the offline problem. The items are presented in rounds. Thats why
 the common Dinamic Programming solution does not work, and basic greedy strategies also
 perform poorly.
 
 **But the items' values and costs need to follow a known probability distribuiton, right?**
 No, we assume very little about the inputs. Actually, we assume nothing about the items'
-values and costs, except that the instants are presented in a random order. Think about it
-like this:
+values and costs, except that the instants are presented in a random order, and that items' values
+and costs are between 0 and 1. Regarding the random order input, you can think of it like this:
 
 #. An adversary carefully and maliciously assembles every round's items.
 #. The rounds order is randomized.

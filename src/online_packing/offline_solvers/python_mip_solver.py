@@ -85,7 +85,7 @@ class PythonMIPSolver(BaseSolver):
                       for i in range(self._size)) <= self._capacity  # type: ignore
         # setting constraint to only choose one item per instant
         for t in range(self._size):
-            m += xsum(x[t][i] for i in range(self._options_per_instant)) == 1
+            m += xsum(x[t][i] for i in range(self._options_per_instant)) <= 1  # type: ignore
         # setting objective function
         m.objective = maximize(xsum(self._values[i][item]*x[i][item]
                                     for item in range(self._options_per_instant)
@@ -99,15 +99,18 @@ class PythonMIPSolver(BaseSolver):
         -------
         None
         """
+        self.packed_items = [-1] * self._size
         self.status = self.solver.optimize(max_seconds=self.max_seconds)
         if self.status in [OptimizationStatus.OPTIMAL, OptimizationStatus.FEASIBLE]:
             self.optimum_value = self.solver.objective_value
             for idx, v in enumerate(self.solver.vars):
                 if abs(v.x) > 1e-6:  # chosen options for an instant are the positive variables
                     chosen_idx = idx % self._options_per_instant
-                    self.packed_items.append(chosen_idx)
+                    time_instant = idx // self._options_per_instant
+                    self.packed_items[time_instant] = chosen_idx
             for t, packed_idx in enumerate(self.packed_items):
-                for dim in range(self._cost_dimension):
-                    self.packed_weight_sum[dim] += self._costs[t][packed_idx][dim]
+                if t >= 0:
+                    for dim in range(self._cost_dimension):
+                        self.packed_weight_sum[dim] += self._costs[t][packed_idx][dim]
         else:
             self.optimum_value = float("inf")

@@ -53,6 +53,8 @@ class GoogleKnapsackSolver(BaseSolver):
     problem as a discrete one. Thus, we multiply every value, cost and capacity by
     :math:`10^n` where :math:`n` is `decimal_places`.
 
+    Also, this solver only accepts one item options per instant.
+
     *Validity Conditions:*
     Also, there are variantions of the packing problem. Some allow the algorithm
     to do nothing, not packing any item, in an instant. Some compel the algorithm
@@ -105,12 +107,9 @@ class GoogleKnapsackSolver(BaseSolver):
         Exception
             If problem instance is not valid.
         """
-        for value_options in values:
-            if(len(value_options) != 2):
-                raise Exception("Each day should have two value options: a real one, and a 0 one.")
-        for cost_options in costs:
-            if(len(cost_options) != 2):
-                raise Exception("Each day should have two cost options: a real one, and a 0 one.")
+        for value_options, cost_options in zip(values, costs):
+            if(len(value_options) > 1 or len(cost_options) > 1):
+                raise Exception("GoogleKnapspackSolver only works with one item per instant.")
 
     def _adapter(self) -> Tuple[List[int], List[List[int]], List[int]]:
         """Adapts instance values from floats into integers.
@@ -143,12 +142,11 @@ class GoogleKnapsackSolver(BaseSolver):
         """
         factor = pow(10, self.decimal_places)
         self.optimum_value: float = self.solver.Solve() / factor
-        self.packed_items = list()
+        self.packed_items = [-1] * self._size
 
         for i in range(len(self.adapted_values)):
-            # if item was packed it was first option of the instant
-            # if item was not packed, second option is packing nothing
-            packed_idx = 0 if self.solver.BestSolutionContains(i) else 1
-            self.packed_items.append(packed_idx)
-            for dim in range(self._cost_dimension):
-                self.packed_weight_sum[dim] += self._costs[i][packed_idx][dim]
+            # if item was packed it was first option of the instant, meaning index 0
+            if self.solver.BestSolutionContains(i):
+                self.packed_items[i] = 0
+                for dim in range(self._cost_dimension):
+                    self.packed_weight_sum[dim] += self._costs[i][0][dim]

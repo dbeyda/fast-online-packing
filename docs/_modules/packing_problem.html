@@ -136,17 +136,10 @@
 <span class="sd">and rules of the Online Packing Problem.</span>
 
 <span class="sd">For each instant, the algorithm receives k options of items, each one with a value and a cost-vector.</span>
-<span class="sd">The algorithm *must* choose an option to pack, and then waits to receive the next options for the next</span>
-<span class="sd">instant. The algorithm may not pack any item that that causes a violation of the capacity constraint in some</span>
-<span class="sd">dimension. When there is no feasible option to choose, the algorithm can *end* the packing. When</span>
-<span class="sd">that happens, new inputs for the next instants may be given repeatedly, and the algorithm can not</span>
-<span class="sd">pack any item anymore.</span>
-
-<span class="sd">In order to accomodate instances that allow the algorithm to skip packing in some instants,</span>
-<span class="sd">it is enough to add an item with value :math:`0` and cost :math:`0` in every dimension.</span>
-<span class="sd">This item should be added to all the instants.</span>
+<span class="sd">The algorithm chooses which option to pack, and then waits until receiving the options for</span>
+<span class="sd">the next instant. The algorithm can also choose to pack no items at a given instant. Also, it may not</span>
+<span class="sd">pack any item that that causes a violation of the capacity constraint in some dimension.</span>
 <span class="sd">"""</span>
-<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 
@@ -183,21 +176,9 @@
 <span class="sd">        Get the value of the items that are available for the current instant.</span>
 <span class="sd">    get_available_costs()</span>
 <span class="sd">        Get the cost of the items that are available for the current instant.</span>
-<span class="sd">    get_state()</span>
-<span class="sd">        Get instance state.</span>
 <span class="sd">    get_cost_dimension()</span>
 <span class="sd">        Get the dimension of the cost vectors.</span>
 <span class="sd">    """</span>
-
-<div class="viewcode-block" id="PackingProblem.State"><a class="viewcode-back" href="../online_solver.html#packing_problem.PackingProblem.State">[docs]</a>    <span class="k">class</span> <span class="nc">State</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-        <span class="sd">""" Enumerates the state of the problem instance.</span>
-
-<span class="sd">        RUNNING: User can still pack items.</span>
-
-<span class="sd">        FINISHED: User can not pack items anymore.</span>
-<span class="sd">        """</span>
-        <span class="n">RUNNING</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-        <span class="n">FINISHED</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span></div>
 
     <span class="n">_capacity</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
     <span class="n">_packed_items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
@@ -210,11 +191,9 @@
     <span class="n">_available_values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]</span>
     <span class="c1"># costs: 1st index = day   //   2nd index = item costs vector   //   3rd index = item cost dimension</span>
     <span class="n">_available_costs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]]</span>
-    <span class="n">_state</span><span class="p">:</span> <span class="n">State</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">capacity</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">cost_dimension</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_packed_value_sum</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">PackingProblem</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">RUNNING</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_capacity</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_capacity</span><span class="p">(</span><span class="n">capacity</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_cost_dimension</span><span class="p">(</span><span class="n">cost_dimension</span><span class="p">)</span>
@@ -308,11 +287,7 @@
 
     <span class="k">def</span> <span class="nf">set_current_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
                            <span class="n">costs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># TODO add State to the packing problem instance</span>
-        <span class="c1"># so that when its finished, we can set_current_inputs</span>
-        <span class="c1"># multiple times at the end</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="ow">is</span> <span class="n">PackingProblem</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">RUNNING</span> \
-                <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_packed_items</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_available_values</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_packed_items</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_available_values</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
                 <span class="s2">"Tried to set next instant without choosing an option for the current instant."</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_curr_inputs</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">costs</span><span class="p">)</span>
@@ -335,6 +310,8 @@
 <span class="sd">        bool</span>
 <span class="sd">            True if the item fits the constraints, False otherwise.</span>
 <span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
         <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cost_dimension</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_available_costs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">idx</span><span class="p">][</span><span class="n">dim</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_packed_costs_sum</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_capacity</span> <span class="o">+</span> <span class="mf">1e-6</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">False</span>
@@ -356,26 +333,24 @@
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        Exception</span>
-<span class="sd">            `end_packing()` was previously called and instance is in `State.FINISHED` state.</span>
-<span class="sd">        Exception</span>
 <span class="sd">            An item was already packed for the current instant.</span>
 <span class="sd">        Exception</span>
 <span class="sd">            Index for the item out of bounds.</span>
 <span class="sd">        Exception</span>
 <span class="sd">            Chosen item  exceed capacity in some dimension.</span>
 <span class="sd">        """</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="ow">is</span> <span class="n">PackingProblem</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">FINISHED</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                <span class="s2">"Packing already finished. You may not continue to pack after packing was ended."</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_available_values</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_packed_items</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
                 <span class="s2">"Packing already made. Currently waiting for the next input."</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">idx</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options_per_instant</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">idx</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options_per_instant</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Tried to pack item out of bounds. Available indexes to pack are [0, ..., </span><span class="se">\</span>
-<span class="s2">                </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_options_per_instant</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2">]."</span><span class="p">)</span>
+<span class="s2">                </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_options_per_instant</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2">] or -1 to pack no items."</span><span class="p">)</span>
 
         <span class="c1"># pack chosen item</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">item_fits</span><span class="p">(</span><span class="n">idx</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_packed_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_packed_value_sum</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">item_fits</span><span class="p">(</span><span class="n">idx</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_packed_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cost_dimension</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_packed_costs_sum</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_available_costs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">idx</span><span class="p">][</span><span class="n">dim</span><span class="p">]</span>
@@ -383,19 +358,6 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_packed_value_sum</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"Tried to pack an item that exceeds capacity in some dimension"</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="PackingProblem.end_packing"><a class="viewcode-back" href="../online_solver.html#packing_problem.PackingProblem.end_packing">[docs]</a>    <span class="k">def</span> <span class="nf">end_packing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">"""Changes instance state into `State.FINISHED`.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Exception</span>
-<span class="sd">            If problem is already in `State.FINISHED` state.</span>
-<span class="sd">        """</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="ow">is</span> <span class="n">PackingProblem</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">PackingProblem</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">FINISHED</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"Problem state is already FINISHED."</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PackingProblem.get_available_values"><a class="viewcode-back" href="../online_solver.html#packing_problem.PackingProblem.get_available_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_available_values</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]:</span>
         <span class="sd">"""Get values of all the available items for past and current instants.</span>
@@ -418,16 +380,6 @@
 <span class="sd">            that instant.</span>
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_available_costs</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="PackingProblem.get_state"><a class="viewcode-back" href="../online_solver.html#packing_problem.PackingProblem.get_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">State</span><span class="p">:</span>
-        <span class="sd">"""Get the state of the problem instance.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        {State.RUNNING, State.FINISHED}</span>
-<span class="sd">            The current problem state.</span>
-<span class="sd">        """</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span></div>
 
 <div class="viewcode-block" id="PackingProblem.get_cost_dimension"><a class="viewcode-back" href="../online_solver.html#packing_problem.PackingProblem.get_cost_dimension">[docs]</a>    <span class="k">def</span> <span class="nf">get_cost_dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""Get the dimension of the cost vectors.</span>

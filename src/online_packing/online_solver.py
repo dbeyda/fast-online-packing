@@ -168,15 +168,17 @@ class OnlineSolver:
             Index of the item with the highest evaluated value.
         """
         if self.current_time <= self._initial_phase_size:
-            return random.randint(0, len(available_values)-1)
+            return random.randint(-1, len(available_values)-1)
         else:
             if self.z is None:
                 self.z = self._compute_z()
             evaluated_options = [available_values[i]
                                  - self.z * helper.dot_product(self.mwu.get_probs(), available_costs[i])
                                  for i in range(len(available_values))]
-            # return index of the item that has the highest evaluated value from evaluated_options
-            return max(enumerate(evaluated_options), key=itemgetter(1))[0]
+            # item that has the highest evaluated value from evaluated_options
+            max_idx, max_value = max(enumerate(evaluated_options), key=itemgetter(1))
+            # evaluate if its worth to get the item or not
+            return max_idx if max_value > 0+1e-6 else -1
 
     def _compute_mwu_gains(self, cost: float) -> float:
         """Compute MWU cost(gains) function for a single dimension.
@@ -204,14 +206,13 @@ class OnlineSolver:
             Cost vectors of the items available on the current instant.
         """
         self.p.set_current_inputs(available_values, available_costs)
-        if self.p.get_state() is PackingProblem.State.RUNNING:
-            chosen_idx = self._choose_index_to_pack(available_values, available_costs)
-            if self.p.item_fits(chosen_idx):
-                self.p.pack(chosen_idx)
-                mwu_gains = list(map(self._compute_mwu_gains, available_costs[chosen_idx]))
-                self.mwu.update_weights(mwu_gains)
-            else:
-                self.p.end_packing()
+        chosen_idx = self._choose_index_to_pack(available_values, available_costs)
+        if not self.p.item_fits(chosen_idx):
+            chosen_idx = -1
+        self.p.pack(chosen_idx)
+        received_costs = available_costs[chosen_idx] if chosen_idx != -1 else [0]*self.cost_dimension
+        mwu_gains = list(map(self._compute_mwu_gains, received_costs))
+        self.mwu.update_weights(mwu_gains)
         self.current_time += 1
 
     def compute_optimum(self) -> float:

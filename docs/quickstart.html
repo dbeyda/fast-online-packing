@@ -138,7 +138,7 @@
 </div>
 <p>First, we start by importing our <cite>generator</cite>, that will
 generate example instances for us, and the <cite>OnlineSolver</cite>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">online_packing.instance_generator</span> <span class="kn">import</span> <span class="n">generator</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">online_packing</span> <span class="kn">import</span> <span class="n">instance_generator</span> <span class="k">as</span> <span class="n">generator</span>
 <span class="kn">from</span> <span class="nn">online_packing.online_solver</span> <span class="kn">import</span> <span class="n">OnlineSolver</span>
 
 <span class="n">n_instants</span> <span class="o">=</span> <span class="mi">400</span>
@@ -155,7 +155,7 @@ a length of 5.</p>
 to the solver.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">delta</span> <span class="o">=</span> <span class="mf">0.3</span>
 <span class="n">values</span><span class="p">,</span> <span class="n">costs</span><span class="p">,</span> <span class="n">cap</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">generate_valid_instance</span><span class="p">(</span>
-    <span class="n">delta</span><span class="p">,</span> <span class="n">n_instants</span><span class="p">,</span> <span class="n">cost_dim</span><span class="p">,</span> <span class="n">items_per_instant</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">mandatory_packing</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">delta</span><span class="p">,</span> <span class="n">n_instants</span><span class="p">,</span> <span class="n">cost_dim</span><span class="p">,</span> <span class="n">items_per_instant</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
 <span class="n">s</span> <span class="o">=</span> <span class="n">OnlineSolver</span><span class="p">(</span><span class="n">cost_dim</span><span class="p">,</span> <span class="n">n_instants</span><span class="p">,</span> <span class="n">cap</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
 </pre></div>
@@ -163,7 +163,6 @@ to the solver.</p>
 <p>On the example generation, notice the following:</p>
 <ul class="simple">
 <li><p><cite>items_per_instant = 3</cite>: this means on each instant or round, there will be 3 options available for the user/algorithm to choose from.</p></li>
-<li><p><cite>mandatory_packing = False</cite>: this makes the generator add an extra item next to the 3 preivous options. This item will have value 0 and cost 0, allowing to user/algorithm to choose it when it decides to “not choose any item”.</p></li>
 </ul>
 <div class="line-block">
 <div class="line"><br/></div>
@@ -218,8 +217,8 @@ compute the offline optimum.</p>
 <div class="line-block">
 <div class="line"><br/></div>
 </div>
-<p>Everything together now:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">online_packing.instance_generator</span> <span class="kn">import</span> <span class="n">generator</span>
+<p>Full code below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">online_packing</span> <span class="kn">import</span> <span class="n">instance_generator</span> <span class="k">as</span> <span class="n">generator</span>
 <span class="kn">from</span> <span class="nn">online_packing.online_solver</span> <span class="kn">import</span> <span class="n">OnlineSolver</span>
 
 <span class="n">n_instants</span> <span class="o">=</span> <span class="mi">400</span>
@@ -227,7 +226,7 @@ compute the offline optimum.</p>
 
 <span class="n">delta</span> <span class="o">=</span> <span class="mf">0.3</span>
 <span class="n">values</span><span class="p">,</span> <span class="n">costs</span><span class="p">,</span> <span class="n">cap</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">generate_valid_instance</span><span class="p">(</span>
-    <span class="n">delta</span><span class="p">,</span> <span class="n">n_instants</span><span class="p">,</span> <span class="n">cost_dim</span><span class="p">,</span> <span class="n">items_per_instant</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">mandatory_packing</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">delta</span><span class="p">,</span> <span class="n">n_instants</span><span class="p">,</span> <span class="n">cost_dim</span><span class="p">,</span> <span class="n">items_per_instant</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
 <span class="n">s</span> <span class="o">=</span> <span class="n">OnlineSolver</span><span class="p">(</span><span class="n">cost_dim</span><span class="p">,</span> <span class="n">n_instants</span><span class="p">,</span> <span class="n">cap</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">PythonMIPSolver</span><span class="p">)</span>
 

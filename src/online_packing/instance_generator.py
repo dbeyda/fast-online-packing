@@ -31,8 +31,25 @@ def _find_cap(target_delta: float, cost_dim: int) -> float:
     return left
 
 
-def generate_valid_instance(target_delta: float, n_instants: int, cost_dim: int, items_per_instant: int = 1,
-                            mandatory_packing: bool = True) -> \
+def _get_random_values(n_instants: int, items_per_instant: int) -> List[List[float]]:
+    """Generates the list of items values randomly.
+    """
+    return [[random.random() for _ in range(items_per_instant)]
+            for _ in range(n_instants)]
+
+
+def _get_random_costs(n_instants: int, items_per_instant: int, cost_dim: int) -> List[List[List[float]]]:
+    """Generates the list of items costs randomly.
+    """
+    weights: List[List[List[float]]] = [[] for _ in range(n_instants)]
+    for t in weights:
+        for _ in range(items_per_instant):
+            t.append([random.random() for _ in range(cost_dim)])
+    return weights
+
+
+def generate_valid_instance(target_delta: float, n_instants: int, cost_dim: int,
+                            items_per_instant: int = 1) -> \
         Tuple[List[List[float]], List[List[List[float]]], float, float]:
     """Generates values for a problem instance that respect guarantees premises,
     thus, theoric guarantees should be valid (see Notes section below).
@@ -47,8 +64,6 @@ def generate_valid_instance(target_delta: float, n_instants: int, cost_dim: int,
         Dimension of the cost vectors to be generated.
     items_per_instant : int
         Number of items that should be available in each instant.
-    mandatory_packing : bool
-        If instance should enforce the need to always pack an item in every instant.
 
     Returns
     -------
@@ -63,10 +78,6 @@ def generate_valid_instance(target_delta: float, n_instants: int, cost_dim: int,
 
     Notes
     -----
-    Setting ``mandatory_packing=False`` will cause this function to add, for each instant,
-    an extra item with :math:`value = 0` and :math:`cost = 0` for every dimension, allowing
-    the player to pack that item when he wants to "do nothing" in some instant.
-
     `target_delta` should be calibrated relative to `n_instants`. Setting a `target_delta`
     too low can cause the :math:`optimum\\_value\\_sum \\geq \\log d / \\epsilon^2` premise to be violated.
     Setting `target_delta` too high is not ideal since the algorithm chooses the items randomly in the first
@@ -82,27 +93,15 @@ def generate_valid_instance(target_delta: float, n_instants: int, cost_dim: int,
     assert target_delta + 1e-6 < 1
     assert target_delta - 1e-6 > 0
 
-    values: List[List[float]] = [[random.random() for _ in range(items_per_instant)]
-                                 for _ in range(n_instants)]
-    if not mandatory_packing:
-        for t in values:
-            t.append(0.0)
-
-    weights: List[List[List[float]]] = [[] for _ in range(n_instants)]
-
-    for t in weights:
-        for _ in range(items_per_instant):
-            t.append([random.random() for _ in range(cost_dim)])
-        if not mandatory_packing:
-            t.append([0.0 for _ in range(cost_dim)])
+    values: List[List[float]] = _get_random_values(n_instants, items_per_instant)
+    costs: List[List[List[float]]] = _get_random_costs(n_instants, items_per_instant, cost_dim)
 
     cap = _find_cap(target_delta, cost_dim)
     e = sqrt(log(cost_dim)/cap)
-    return values.copy(), deepcopy(weights), cap, e
+    return values.copy(), deepcopy(costs), cap, e
 
 
-def generate_random_instance(n_instants: int, cost_dim: int, items_per_instant: int = 1,
-                             mandatory_packing: bool = True) -> \
+def generate_random_instance(n_instants: int, cost_dim: int, items_per_instant: int = 1) -> \
         Tuple[List[List[float]], List[List[List[float]]], float, float]:
     """Generates random values, costs and capacity for a Packing Problem instance.
     Instances generated here may not respect guarantees constraints.
@@ -115,8 +114,6 @@ def generate_random_instance(n_instants: int, cost_dim: int, items_per_instant: 
         Dimension of the cost vectors to be generated.
     items_per_instant : int
         Number of items that should be available in each instant.
-    mandatory_packing : bool
-        If instance should enforce the need to always pack an item in every instant.
 
     Returns
     -------
@@ -128,30 +125,13 @@ def generate_random_instance(n_instants: int, cost_dim: int, items_per_instant: 
         A random problem capacity.
     e : float
         The best theorical epsilon for the generated problem.
-
-    Notes
-    -----
-    Setting ``mandatory_packing=False`` will cause this function to add, for each instant,
-    an extra item with :math:`value = 0` and :math:`cost = 0` for every dimension, allowing
-    the player to pack that item when he wants to "do nothing" in some instant.
     """
     assert items_per_instant > 0
     assert cost_dim > 0
 
-    values: List[List[float]] = [[random.random() for _ in range(items_per_instant)]
-                                 for _ in range(n_instants)]
-    if not mandatory_packing:
-        for t in values:
-            t.append(0.0)
-
-    weights: List[List[List[float]]] = [[] for _ in range(n_instants)]
-
-    for t in weights:
-        for _ in range(items_per_instant):
-            t.append([random.random() for _ in range(cost_dim)])
-        if not mandatory_packing:
-            t.append([0.0 for _ in range(cost_dim)])
+    values: List[List[float]] = _get_random_values(n_instants, items_per_instant)
+    costs: List[List[List[float]]] = _get_random_costs(n_instants, items_per_instant, cost_dim)
 
     cap = random.random() * n_instants/2
     e = sqrt(log(cost_dim, 2)/cap)
-    return values.copy(), deepcopy(weights), cap, e
+    return values.copy(), deepcopy(costs), cap, e

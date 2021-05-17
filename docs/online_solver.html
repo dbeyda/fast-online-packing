@@ -136,14 +136,9 @@
 <p>This module encapsulates and formalizes all aspects
 and rules of the Online Packing Problem.</p>
 <p>For each instant, the algorithm receives k options of items, each one with a value and a cost-vector.
-The algorithm <em>must</em> choose an option to pack, and then waits to receive the next options for the next
-instant. The algorithm may not pack any item that that causes a violation of the capacity constraint in some
-dimension. When there is no feasible option to choose, the algorithm can <em>end</em> the packing. When
-that happens, new inputs for the next instants may be given repeatedly, and the algorithm can not
-pack any item anymore.</p>
-<p>In order to accomodate instances that allow the algorithm to skip packing in some instants,
-it is enough to add an item with value <span class="math notranslate nohighlight">\(0\)</span> and cost <span class="math notranslate nohighlight">\(0\)</span> in every dimension.
-This item should be added to all the instants.</p>
+The algorithm chooses which option to pack, and then waits until receiving the options for
+the next instant. The algorithm can also choose to pack no items at a given instant. Also, it may not
+pack any item that that causes a violation of the capacity constraint in some dimension.</p>
 <dl class="py class">
 <dt id="packing_problem.PackingProblem">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">packing_problem.</span></code><code class="sig-name descname"><span class="pre">PackingProblem</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_dimension</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/packing_problem.html#PackingProblem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#packing_problem.PackingProblem" title="Permalink to this definition">¶</a></dt>
@@ -192,37 +187,14 @@ of the game, and some methods depend on that state.</p>
 <tr class="row-even"><td><p><strong>get_available_costs()</strong></p></td>
 <td><p>Get the cost of the items that are available for the current instant.</p></td>
 </tr>
-<tr class="row-odd"><td><p><strong>get_state()</strong></p></td>
-<td><p>Get instance state.</p></td>
-</tr>
-<tr class="row-even"><td><p><strong>get_cost_dimension()</strong></p></td>
+<tr class="row-odd"><td><p><strong>get_cost_dimension()</strong></p></td>
 <td><p>Get the dimension of the cost vectors.</p></td>
 </tr>
 </tbody>
 </table></div>
-<dl class="py class">
-<dt id="packing_problem.PackingProblem.State">
-<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">State</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/packing_problem.html#PackingProblem.State"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#packing_problem.PackingProblem.State" title="Permalink to this definition">¶</a></dt>
-<dd><p>Enumerates the state of the problem instance.</p>
-<p>RUNNING: User can still pack items.</p>
-<p>FINISHED: User can not pack items anymore.</p>
-</dd></dl>
-<dl class="py method">
-<dt id="packing_problem.PackingProblem.end_packing">
-<code class="sig-name descname"><span class="pre">end_packing</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> → <span class="pre">None</span><a class="reference internal" href="_modules/packing_problem.html#PackingProblem.end_packing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#packing_problem.PackingProblem.end_packing" title="Permalink to this definition">¶</a></dt>
-<dd><p>Changes instance state into <cite>State.FINISHED</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><dl class="simple">
-<dt>Exception</dt><dd><p>If problem is already in <cite>State.FINISHED</cite> state.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
 <dl class="py method">
 <dt id="packing_problem.PackingProblem.get_available_costs">
-<code class="sig-name descname"><span class="pre">get_available_costs</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> → <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/packing_problem.html#PackingProblem.get_available_costs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#packing_problem.PackingProblem.get_available_costs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_available_costs</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> → <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/packing_problem.html#PackingProblem.get_available_costs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#packing_problem.PackingProblem.get_available_costs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get costs of all the available items for past and current instants.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -235,7 +207,7 @@ of the game, and some methods depend on that state.</p>
 </dd></dl>
 <dl class="py method">
 <dt id="packing_problem.PackingProblem.get_available_values">
-<code class="sig-name descname"><span class="pre">get_available_values</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> → <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/packing_problem.html#PackingProblem.get_available_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#packing_problem.PackingProblem.get_available_values" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_available_values</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> → <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/packing_problem.html#PackingProblem.get_available_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#packing_problem.PackingProblem.get_available_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get values of all the available items for past and current instants.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -286,19 +258,6 @@ of the game, and some methods depend on that state.</p>
 </dl>
 </dd></dl>
 <dl class="py method">
-<dt id="packing_problem.PackingProblem.get_state">
-<code class="sig-name descname"><span class="pre">get_state</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> → <a class="reference internal" href="#packing_problem.PackingProblem.State" title="packing_problem.PackingProblem.State"><span class="pre">packing_problem.PackingProblem.State</span></a><a class="reference internal" href="_modules/packing_problem.html#PackingProblem.get_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#packing_problem.PackingProblem.get_state" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the state of the problem instance.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><dl class="simple">
-<dt>{State.RUNNING, State.FINISHED}</dt><dd><p>The current problem state.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py method">
 <dt id="packing_problem.PackingProblem.item_fits">
 <code class="sig-name descname"><span class="pre">item_fits</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> → <span class="pre">bool</span><a class="reference internal" href="_modules/packing_problem.html#PackingProblem.item_fits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#packing_problem.PackingProblem.item_fits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks that currently available item of index <cite>idx</cite> fits the capacity constriants.</p>
@@ -336,8 +295,6 @@ of the game, and some methods depend on that state.</p>
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><dl class="simple">
-<dt>Exception</dt><dd><p><cite>end_packing()</cite> was previously called and instance is in <cite>State.FINISHED</cite> state.</p>
-</dd>
 <dt>Exception</dt><dd><p>An item was already packed for the current instant.</p>
 </dd>
 <dt>Exception</dt><dd><p>Index for the item out of bounds.</p>
@@ -404,6 +361,5 @@ of the game, and some methods depend on that state.</p>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
 </html>

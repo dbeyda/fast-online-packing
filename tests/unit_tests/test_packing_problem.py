@@ -17,10 +17,6 @@ class TestPackingProblem:
         p = packing_problem.PackingProblem(3, 5)
         assert p.get_capacity() == 3
 
-    def test_get_state(self):
-        p = packing_problem.PackingProblem(25.5, 5)
-        assert p.get_state() is packing_problem.PackingProblem.State.RUNNING
-
     def test_get_cost_dimension(self):
         p = packing_problem.PackingProblem(25.5, 5)
         assert p.get_cost_dimension() == 5
@@ -59,13 +55,18 @@ class TestPackingProblem:
         problem_instance.set_current_inputs([0.8], [[0.6, 0]])
         assert problem_instance.item_fits(0) is False
 
-    def test_pack(self):
+    def test_pack_item(self):
         p = packing_problem.PackingProblem(0.5, 2)
         p.set_current_inputs([0.3, 0.4], [[0.1, 0.2], [0.5, 0.6]])
         # test packing doesnt fit
         with pytest.raises(Exception):
             p.pack(1)
         p.pack(0)
+
+    def test_pack_none(self):
+        p = packing_problem.PackingProblem(0.01, 2)
+        p.set_current_inputs([0.3, 0.4], [[0.1, 0.2], [0.5, 0.6]])
+        p.pack(-1)
 
     def test_packing_two_in_a_row(self):
         p = packing_problem.PackingProblem(0.5, 2)
@@ -80,19 +81,3 @@ class TestPackingProblem:
             p.pack(0)
         # test item 1 does fit
         p.pack(1)
-
-    def test_end_packing(self):
-        # when end_packing is called, user should be able to
-        # set many inputs in a row without packing
-        p = packing_problem.PackingProblem(0.5, 2)
-        p.set_current_inputs([0.3, 0.4], [[0.1, 0.2], [0.5, 0.6]])
-        p.end_packing()
-        p.set_current_inputs([0.3, 0.4], [[0.1, 0.2], [0.5, 0.6]])
-        p.set_current_inputs([0.3, 0.4], [[0.1, 0.2], [0.5, 0.6]])
-
-    def test_cannot_pack_after_end_packing(self):
-        p = packing_problem.PackingProblem(0.5, 2)
-        p.set_current_inputs([0.3, 0.4], [[0.1, 0.2], [0.5, 0.6]])
-        p.end_packing()
-        with pytest.raises(Exception):
-            p.pack(0)
