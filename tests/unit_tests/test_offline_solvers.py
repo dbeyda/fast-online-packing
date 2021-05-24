@@ -1,7 +1,7 @@
 from typing import Any
 import pytest
-from online_packing.offline_solvers.google_knapsack_solver import GoogleKnapsackSolver
-from online_packing.offline_solvers.python_mip_solver import PythonMIPSolver
+from fast_online_packing.offline_solvers.google_knapsack_solver import GoogleKnapsackSolver
+from fast_online_packing.offline_solvers.python_mip_solver import PythonMIPSolver
 
 
 example1: Any = {

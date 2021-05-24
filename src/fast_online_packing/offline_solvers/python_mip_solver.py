@@ -1,6 +1,6 @@
 from typing import Any, Union, List
 from mip import Model, MAXIMIZE, CBC, BINARY, OptimizationStatus, xsum, maximize
-from online_packing.offline_solvers.base_solver import BaseSolver
+from fast_online_packing.offline_solvers.base_solver import BaseSolver
 
 
 class PythonMIPSolver(BaseSolver):

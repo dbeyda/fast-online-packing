@@ -1,5 +1,5 @@
 import pytest
-from online_packing.mwu_max import MwuMax
+from fast_online_packing.mwu_max import MwuMax
 
 
 class TestMwuMax():

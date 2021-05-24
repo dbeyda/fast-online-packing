@@ -1,7 +1,7 @@
-from online_packing.offline_solvers.google_knapsack_solver import GoogleKnapsackSolver
-from online_packing.offline_solvers.python_mip_solver import PythonMIPSolver
-from online_packing import instance_generator as generator
-from online_packing.online_solver import OnlineSolver
+from fast_online_packing.offline_solvers.google_knapsack_solver import GoogleKnapsackSolver
+from fast_online_packing.offline_solvers.python_mip_solver import PythonMIPSolver
+from fast_online_packing import instance_generator as generator
+from fast_online_packing.online_solver import OnlineSolver
 
 t = 50
 cost_dim = 3

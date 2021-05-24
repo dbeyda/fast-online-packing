@@ -1,5 +1,5 @@
 import pytest
-from online_packing import packing_problem
+from fast_online_packing import packing_problem
 
 
 class TestPackingProblem:

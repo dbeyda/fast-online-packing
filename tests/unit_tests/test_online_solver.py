@@ -1,4 +1,4 @@
-from online_packing.online_solver import OnlineSolver
+from fast_online_packing.online_solver import OnlineSolver
 from test_data import instance_valid_premises, instance_violated_premises
 
 valid = instance_valid_premises

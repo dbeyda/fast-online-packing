@@ -1,6 +1,6 @@
 from ortools.algorithms import pywrapknapsack_solver
 from typing import List, Any, Tuple, Union
-from online_packing.offline_solvers.base_solver import BaseSolver
+from fast_online_packing.offline_solvers.base_solver import BaseSolver
 
 
 class GoogleKnapsackSolver(BaseSolver):

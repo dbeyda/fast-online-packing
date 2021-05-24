@@ -1,6 +1,6 @@
 from typing import Any
 import pytest
-from online_packing import helper
+from fast_online_packing import helper
 
 
 class TestDotProduct:

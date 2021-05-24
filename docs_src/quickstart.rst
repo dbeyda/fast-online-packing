@@ -8,8 +8,8 @@ generate example instances for us, and the `OnlineSolver`.
 
 .. code-block:: python
 
-    from online_packing import instance_generator as generator
-    from online_packing.online_solver import OnlineSolver
+    from fast_online_packing import instance_generator as generator
+    from fast_online_packing.online_solver import OnlineSolver
 
     n_instants = 400
     cost_dim = 5
@@ -96,8 +96,8 @@ Full code below:
 
 .. code-block:: python
 
-    from online_packing import instance_generator as generator
-    from online_packing.online_solver import OnlineSolver
+    from fast_online_packing import instance_generator as generator
+    from fast_online_packing.online_solver import OnlineSolver
 
     n_instants = 400
     cost_dim = 5

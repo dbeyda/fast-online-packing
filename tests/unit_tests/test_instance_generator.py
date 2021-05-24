@@ -1,4 +1,4 @@
-from online_packing.instance_generator import generate_random_instance, generate_valid_instance
+from fast_online_packing.instance_generator import generate_random_instance, generate_valid_instance
 import pytest
 from math import log
 

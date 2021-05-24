@@ -22,12 +22,12 @@ Update Method: a Meta Algorithm and Applications. Theory of Computing [electroni
 from math import log, sqrt, ceil
 from typing import List, Union, Type
 import random
-from online_packing.mwu_max import MwuMax
+from fast_online_packing.mwu_max import MwuMax
 from operator import itemgetter
-from online_packing import helper
-from online_packing.offline_solvers.base_solver import BaseSolver
-from online_packing.offline_solvers.python_mip_solver import PythonMIPSolver
-from online_packing.packing_problem import PackingProblem
+from fast_online_packing import helper
+from fast_online_packing.offline_solvers.base_solver import BaseSolver
+from fast_online_packing.offline_solvers.python_mip_solver import PythonMIPSolver
+from fast_online_packing.packing_problem import PackingProblem
 
 
 class OnlineSolver:

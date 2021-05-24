@@ -17,7 +17,7 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath('../src/online_packing'))
+sys.path.insert(0, os.path.abspath('../src/fast_online_packing'))
 
 # -- Project information -----------------------------------------------------
 

@@ -16,7 +16,6 @@ MarkupSafe==1.1.1
 mccabe==0.6.1
 mip==1.13.0
 numpydoc==1.1.0
--e git+https://github.com/dbeyda/agrawal-devanur-online-packing.git@da9f4f920c817b40ccfcf302eb55fbfa2e5c47af#egg=online_packing
 ortools==8.2.8710
 packaging==20.9
 pluggy==0.13.1

@@ -1,5 +1,5 @@
-Welcome to Online Packing's API Reference!
-==========================================
+Welcome to Fast Online Packing's API Reference!
+===============================================
 
 This package aims to solve the Online Stochastic Packing Problem,
 based on the algorithm given by Agrawal and Devanur [1]_.
