@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
 
     <meta name="generator" content="sphinx-3.5.4, furo 2021.04.11.beta34"/>
-        <title>online_solver - Online Packing</title>
+        <title>online_solver - Fast Online Packing</title>
       <link rel="stylesheet" href="../_static/styles/furo.css?digest=59ab60ac09ea94ccfe6deddff6d715cce948a6fc">
     <link rel="stylesheet" href="../_static/pygments.css">
     <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css">
@@ -86,7 +86,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">Online Packing</div></a>
+      <a href="../index.html"><div class="brand">Fast Online Packing</div></a>
     </div>
     <div class="header-right">
       <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
@@ -100,7 +100,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
   
-  <span class="sidebar-brand-text">Online Packing</span>
+  <span class="sidebar-brand-text">Fast Online Packing</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html">
   <input class="sidebar-search" placeholder=Search name="q">
@@ -111,12 +111,12 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../online_solver.html">Packing Problem Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../instance_generator.html">Instance Generator Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../packing_problem.html">Packing Problem Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../helper.html">Helper Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../mwu_max.html">MWU-Max Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../offline_solvers.html">Offline Solvers Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../packing_problem.html">Online Solver Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../instance_generator.html">Instance Generator Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../online_solver.html">Online Solver Module</a></li>
 </ul>
 
 </div>
@@ -156,15 +156,15 @@
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">log</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">ceil</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Type</span>
 <span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">from</span> <span class="nn">online_packing.mwu_max</span> <span class="kn">import</span> <span class="n">MwuMax</span>
+<span class="kn">from</span> <span class="nn">fast_online_packing.mwu_max</span> <span class="kn">import</span> <span class="n">MwuMax</span>
 <span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
-<span class="kn">from</span> <span class="nn">online_packing</span> <span class="kn">import</span> <span class="n">helper</span>
-<span class="kn">from</span> <span class="nn">online_packing.offline_solvers.base_solver</span> <span class="kn">import</span> <span class="n">BaseSolver</span>
-<span class="kn">from</span> <span class="nn">online_packing.offline_solvers.python_mip_solver</span> <span class="kn">import</span> <span class="n">PythonMIPSolver</span>
-<span class="kn">from</span> <span class="nn">online_packing.packing_problem</span> <span class="kn">import</span> <span class="n">PackingProblem</span>
+<span class="kn">from</span> <span class="nn">fast_online_packing</span> <span class="kn">import</span> <span class="n">helper</span>
+<span class="kn">from</span> <span class="nn">fast_online_packing.offline_solvers.base_solver</span> <span class="kn">import</span> <span class="n">BaseSolver</span>
+<span class="kn">from</span> <span class="nn">fast_online_packing.offline_solvers.python_mip_solver</span> <span class="kn">import</span> <span class="n">PythonMIPSolver</span>
+<span class="kn">from</span> <span class="nn">fast_online_packing.packing_problem</span> <span class="kn">import</span> <span class="n">PackingProblem</span>
 
 
-<div class="viewcode-block" id="OnlineSolver"><a class="viewcode-back" href="../packing_problem.html#online_solver.OnlineSolver">[docs]</a><span class="k">class</span> <span class="nc">OnlineSolver</span><span class="p">:</span>
+<div class="viewcode-block" id="OnlineSolver"><a class="viewcode-back" href="../online_solver.html#online_solver.OnlineSolver">[docs]</a><span class="k">class</span> <span class="nc">OnlineSolver</span><span class="p">:</span>
     <span class="sd">"""Solves the Online Stochastic Packing Problem.</span>
 
 <span class="sd">    Parameters</span>
@@ -260,7 +260,7 @@
     <span class="k">def</span> <span class="nf">cost_dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">get_cost_dimension</span><span class="p">()</span>
 
-<div class="viewcode-block" id="OnlineSolver.print_params"><a class="viewcode-back" href="../packing_problem.html#online_solver.OnlineSolver.print_params">[docs]</a>    <span class="k">def</span> <span class="nf">print_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="OnlineSolver.print_params"><a class="viewcode-back" href="../online_solver.html#online_solver.OnlineSolver.print_params">[docs]</a>    <span class="k">def</span> <span class="nf">print_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""Print algorithm parameters.</span>
 <span class="sd">        """</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"capacity = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">get_capacity</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
@@ -329,7 +329,7 @@
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="n">cost</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">get_capacity</span><span class="p">()</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">total_time</span>
 
-<div class="viewcode-block" id="OnlineSolver.pack_one"><a class="viewcode-back" href="../packing_problem.html#online_solver.OnlineSolver.pack_one">[docs]</a>    <span class="k">def</span> <span class="nf">pack_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">available_costs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="OnlineSolver.pack_one"><a class="viewcode-back" href="../online_solver.html#online_solver.OnlineSolver.pack_one">[docs]</a>    <span class="k">def</span> <span class="nf">pack_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">available_costs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">"""Receives the new instant's items and chooses one to pack.</span>
 
 <span class="sd">        Parameters</span>
@@ -338,6 +338,11 @@
 <span class="sd">            Value of the items available on the current instant.</span>
 <span class="sd">        available_costs : list of list of float</span>
 <span class="sd">            Cost vectors of the items available on the current instant.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            Index of the chosen item or -1 if none of the items were packed.</span>
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">set_current_inputs</span><span class="p">(</span><span class="n">available_values</span><span class="p">,</span> <span class="n">available_costs</span><span class="p">)</span>
         <span class="n">chosen_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_choose_index_to_pack</span><span class="p">(</span><span class="n">available_values</span><span class="p">,</span> <span class="n">available_costs</span><span class="p">)</span>
@@ -347,9 +352,10 @@
         <span class="n">received_costs</span> <span class="o">=</span> <span class="n">available_costs</span><span class="p">[</span><span class="n">chosen_idx</span><span class="p">]</span> <span class="k">if</span> <span class="n">chosen_idx</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="k">else</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cost_dimension</span>
         <span class="n">mwu_gains</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_compute_mwu_gains</span><span class="p">,</span> <span class="n">received_costs</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mwu</span><span class="o">.</span><span class="n">update_weights</span><span class="p">(</span><span class="n">mwu_gains</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">current_time</span> <span class="o">+=</span> <span class="mi">1</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_time</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">chosen_idx</span></div>
 
-<div class="viewcode-block" id="OnlineSolver.compute_optimum"><a class="viewcode-back" href="../packing_problem.html#online_solver.OnlineSolver.compute_optimum">[docs]</a>    <span class="k">def</span> <span class="nf">compute_optimum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="OnlineSolver.compute_optimum"><a class="viewcode-back" href="../online_solver.html#online_solver.OnlineSolver.compute_optimum">[docs]</a>    <span class="k">def</span> <span class="nf">compute_optimum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">"""Solve the problem offline to find out the optimum solution.</span>
 
 <span class="sd">        Returns</span>
@@ -362,7 +368,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">optimum_value</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">optimum_value</span>
         <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">optimum_value</span></div>
 
-<div class="viewcode-block" id="OnlineSolver.print_result"><a class="viewcode-back" href="../packing_problem.html#online_solver.OnlineSolver.print_result">[docs]</a>    <span class="k">def</span> <span class="nf">print_result</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="OnlineSolver.print_result"><a class="viewcode-back" href="../online_solver.html#online_solver.OnlineSolver.print_result">[docs]</a>    <span class="k">def</span> <span class="nf">print_result</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">"""Print usefull information about the algorithm execution.</span>
 <span class="sd">        """</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Opt: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">optimum_value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
@@ -372,7 +378,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"     B = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">get_capacity</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"     TOPT = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">optimum_value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="OnlineSolver.get_premises_min"><a class="viewcode-back" href="../packing_problem.html#online_solver.OnlineSolver.get_premises_min">[docs]</a>    <span class="k">def</span> <span class="nf">get_premises_min</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="OnlineSolver.get_premises_min"><a class="viewcode-back" href="../online_solver.html#online_solver.OnlineSolver.get_premises_min">[docs]</a>    <span class="k">def</span> <span class="nf">get_premises_min</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">"""Get the minimum value of capacity and `optimum_value` for the</span>
 <span class="sd">        premises to be valid.</span>
 
@@ -383,7 +389,7 @@
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">get_cost_dimension</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">e</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">e</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="OnlineSolver.respect_premises"><a class="viewcode-back" href="../packing_problem.html#online_solver.OnlineSolver.respect_premises">[docs]</a>    <span class="k">def</span> <span class="nf">respect_premises</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="OnlineSolver.respect_premises"><a class="viewcode-back" href="../online_solver.html#online_solver.OnlineSolver.respect_premises">[docs]</a>    <span class="k">def</span> <span class="nf">respect_premises</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">"""Informs if both the algorithm premises (`optimum_value` and capacity) were fulfilled.</span>
 
 <span class="sd">        Returns</span>
@@ -405,7 +411,7 @@
         </div>
 
         <div class="related-information">
-              Copyright &#169; 2021, David
+              Copyright &#169; 2021, David Beyda
             |
             Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
               and

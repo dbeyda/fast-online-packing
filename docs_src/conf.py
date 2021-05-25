@@ -21,9 +21,9 @@ sys.path.insert(0, os.path.abspath('../src/fast_online_packing'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'Online Packing'
-copyright = '2021, David'
-author = 'David'
+project = 'Fast Online Packing'
+copyright = '2021, David Beyda'
+author = 'David Beyda'
 
 
 # -- General configuration ---------------------------------------------------

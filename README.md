@@ -1,7 +1,3 @@
-# Fast Online Packing
-Implementation of Agrawal &amp; Devanur's Online Stochastic Packing Algorithm, described in "Fast Algorithms for Online Stochastic Convex Programming".
-
-
 <!-- PROJECT SHIELDS -->
 <!--
 *** I'm using markdown "reference style" links for readability.
@@ -14,10 +10,9 @@ Implementation of Agrawal &amp; Devanur's Online Stochastic Packing Algorithm, d
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
 
-
 <!-- PROJECT LOGO -->
 <br />
-  <h2 align="center">Fast Online Packing</h2>
+  <h1 align="center">Fast Online Packing</h1>
 
   <p align="center">
     An implementation of Agrawal &amp; Devanur's Online Stochastic Packing Algorithm, described in "Fast Algorithms for Online Stochastic Convex Programming".
@@ -34,8 +29,13 @@ Implementation of Agrawal &amp; Devanur's Online Stochastic Packing Algorithm, d
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This is an implementation of the 
-Here's a blank template to get started...
+This is an implementation of the [Online Packing](https://dbeyda.github.io/fast-online-packing/) algorithm presented by Agrawal  &amp; Devanur on ["Fast Algorithms for Online Stochastic Convex Programming"](https://dl.acm.org/doi/10.5555/2722129.2722222) (Algorithm 6.1), published in SODA'15. This algorithm tries to solve the Online Packing problem in the random-order model. [You can learn more about it in the docs](https://dbeyda.github.io/fast-online-packing/).
+
+
+This project aims to provide a clear understanding of the algorithm, enlighten possible implementation dificulties and be used in fast prototyping scenarios. It was not designed for runtime performance nor for use in production environments.
+
+In addition, this library provides a `Packing Problem` module that describes and enforces the Online Packing problem. This module can be used independently to assist the development of other algorithms for this same problem.  
+
 
 ### External Usage Dependencies
 
@@ -65,7 +65,33 @@ pip install fast-online-packing
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+<br />
+
+```python
+from fast_online_packing import instance_generator as generator
+from fast_online_packing.online_solver import OnlineSolver
+
+n_instants = 400
+cost_dim = 5
+
+delta = 0.3
+values, costs, cap, e = generator.generate_valid_instance(
+    delta, n_instants, cost_dim, items_per_instant=3)
+
+# instantiate the solver
+s = OnlineSolver(cost_dim, n_instants, cap, e, PythonMIPSolver)
+
+for v, c in zip(values, costs):
+    # ask the solver which item should we pack
+    chosen_idx = s.pack_one(v, c)
+    
+    if chosen_idx == -1:
+      print("No item chosen this round.")
+    else:
+      print("Algorithm picked item with index ", chosen_idx)
+      item_value = v[chosen_idx]
+      item_cost_vector = c[chosen_idx]
+```
 
 _For more examples, please refer to the [Documentation](https://dbeyda.github.io/fast-online-packing/)_
 
@@ -104,19 +130,19 @@ pytest .
 
 If you want to output the test log to a file, you can do:
 ```
-pytest . > file.txt
+pytest . > testlog.txt
 ```
 
 <br />
 
 ### Generating New Documentation
 
-Documentation is provided in the HTML format and was generated with [Sphinx](https://www.sphinx-doc.org/). API reference was generated automatically with [autodoc](https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html) from _docstrings_. Documentation source files are found in the `docs_src` folder.
+Documentation is provided in the HTML format and was generated with [Sphinx](https://www.sphinx-doc.org/). API reference was generated automatically with [autodoc](https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html) from _docstrings_. Documentation source files are found in the `docs_src` folder, and generated HTML docs are in the `docs/` folder. This arrangement facilitates deploying the docs to GitHub Pages. 
 
 To generate new documentation:
 ```
 cd docs_src
-make html
+make github
 ```
 
 Sphinx will read the `.rst` files in `docs_src/` to generate new HTML files in the `docs/` folder.

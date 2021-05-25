@@ -23,7 +23,7 @@ Now we are ready to install the dependency from PyPI.
 
 ::
 
-    $ pip install online_packing
+    $ pip install fast-online-packing
 
 |
 

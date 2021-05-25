@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
 
     <meta name="generator" content="sphinx-3.5.4, furo 2021.04.11.beta34"/>
-        <title>packing_problem - Online Packing</title>
+        <title>packing_problem - Fast Online Packing</title>
       <link rel="stylesheet" href="../_static/styles/furo.css?digest=59ab60ac09ea94ccfe6deddff6d715cce948a6fc">
     <link rel="stylesheet" href="../_static/pygments.css">
     <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css">
@@ -86,7 +86,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">Online Packing</div></a>
+      <a href="../index.html"><div class="brand">Fast Online Packing</div></a>
     </div>
     <div class="header-right">
       <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
@@ -100,7 +100,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
   
-  <span class="sidebar-brand-text">Online Packing</span>
+  <span class="sidebar-brand-text">Fast Online Packing</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html">
   <input class="sidebar-search" placeholder=Search name="q">
@@ -111,12 +111,12 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../online_solver.html">Packing Problem Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../instance_generator.html">Instance Generator Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../packing_problem.html">Packing Problem Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../helper.html">Helper Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../mwu_max.html">MWU-Max Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../offline_solvers.html">Offline Solvers Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../packing_problem.html">Online Solver Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../instance_generator.html">Instance Generator Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../online_solver.html">Online Solver Module</a></li>
 </ul>
 
 </div>
@@ -144,7 +144,7 @@
 <span class="kn">import</span> <span class="nn">copy</span>
 
 
-<div class="viewcode-block" id="PackingProblem"><a class="viewcode-back" href="../online_solver.html#packing_problem.PackingProblem">[docs]</a><span class="k">class</span> <span class="nc">PackingProblem</span><span class="p">:</span>
+<div class="viewcode-block" id="PackingProblem"><a class="viewcode-back" href="../packing_problem.html#packing_problem.PackingProblem">[docs]</a><span class="k">class</span> <span class="nc">PackingProblem</span><span class="p">:</span>
     <span class="sd">"""Class that enforces all aspects of the</span>
 <span class="sd">    online packing problem.</span>
 
@@ -240,7 +240,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_capacity</span> <span class="o">=</span> <span class="n">capacity</span>
 
-<div class="viewcode-block" id="PackingProblem.get_capacity"><a class="viewcode-back" href="../online_solver.html#packing_problem.PackingProblem.get_capacity">[docs]</a>    <span class="k">def</span> <span class="nf">get_capacity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<div class="viewcode-block" id="PackingProblem.get_capacity"><a class="viewcode-back" href="../packing_problem.html#packing_problem.PackingProblem.get_capacity">[docs]</a>    <span class="k">def</span> <span class="nf">get_capacity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="sd">"""Get the problem capacity.</span>
 
 <span class="sd">        Returns</span>
@@ -250,7 +250,7 @@
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_capacity</span></div>
 
-<div class="viewcode-block" id="PackingProblem.get_options_per_instant"><a class="viewcode-back" href="../online_solver.html#packing_problem.PackingProblem.get_options_per_instant">[docs]</a>    <span class="k">def</span> <span class="nf">get_options_per_instant</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="PackingProblem.get_options_per_instant"><a class="viewcode-back" href="../packing_problem.html#packing_problem.PackingProblem.get_options_per_instant">[docs]</a>    <span class="k">def</span> <span class="nf">get_options_per_instant</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">"""Get the number of available items per instant.</span>
 
 <span class="sd">        Returns</span>
@@ -297,7 +297,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_options_per_instant</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_packed_costs_sum</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cost_dimension</span><span class="p">)]</span>
 
-<div class="viewcode-block" id="PackingProblem.item_fits"><a class="viewcode-back" href="../online_solver.html#packing_problem.PackingProblem.item_fits">[docs]</a>    <span class="k">def</span> <span class="nf">item_fits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="PackingProblem.item_fits"><a class="viewcode-back" href="../packing_problem.html#packing_problem.PackingProblem.item_fits">[docs]</a>    <span class="k">def</span> <span class="nf">item_fits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">"""Checks that currently available item of index `idx` fits the capacity constriants.</span>
 
 <span class="sd">        Parameters</span>
@@ -317,7 +317,7 @@
                 <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="PackingProblem.pack"><a class="viewcode-back" href="../online_solver.html#packing_problem.PackingProblem.pack">[docs]</a>    <span class="k">def</span> <span class="nf">pack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<div class="viewcode-block" id="PackingProblem.pack"><a class="viewcode-back" href="../packing_problem.html#packing_problem.PackingProblem.pack">[docs]</a>    <span class="k">def</span> <span class="nf">pack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="sd">"""Pack item of index `idx`, from the currently available.</span>
 
 <span class="sd">        Parameters</span>
@@ -359,7 +359,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"Tried to pack an item that exceeds capacity in some dimension"</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="PackingProblem.get_available_values"><a class="viewcode-back" href="../online_solver.html#packing_problem.PackingProblem.get_available_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_available_values</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]:</span>
+<div class="viewcode-block" id="PackingProblem.get_available_values"><a class="viewcode-back" href="../packing_problem.html#packing_problem.PackingProblem.get_available_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_available_values</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]:</span>
         <span class="sd">"""Get values of all the available items for past and current instants.</span>
 
 <span class="sd">        Returns</span>
@@ -370,7 +370,7 @@
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_available_values</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="PackingProblem.get_available_costs"><a class="viewcode-back" href="../online_solver.html#packing_problem.PackingProblem.get_available_costs">[docs]</a>    <span class="k">def</span> <span class="nf">get_available_costs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]]:</span>
+<div class="viewcode-block" id="PackingProblem.get_available_costs"><a class="viewcode-back" href="../packing_problem.html#packing_problem.PackingProblem.get_available_costs">[docs]</a>    <span class="k">def</span> <span class="nf">get_available_costs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]]:</span>
         <span class="sd">"""Get costs of all the available items for past and current instants.</span>
 
 <span class="sd">        Returns</span>
@@ -381,7 +381,7 @@
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_available_costs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="PackingProblem.get_cost_dimension"><a class="viewcode-back" href="../online_solver.html#packing_problem.PackingProblem.get_cost_dimension">[docs]</a>    <span class="k">def</span> <span class="nf">get_cost_dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PackingProblem.get_cost_dimension"><a class="viewcode-back" href="../packing_problem.html#packing_problem.PackingProblem.get_cost_dimension">[docs]</a>    <span class="k">def</span> <span class="nf">get_cost_dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""Get the dimension of the cost vectors.</span>
 
 <span class="sd">        Returns</span>
@@ -400,7 +400,7 @@
         </div>
 
         <div class="related-information">
-              Copyright &#169; 2021, David
+              Copyright &#169; 2021, David Beyda
             |
             Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
               and

@@ -34,7 +34,7 @@ to the solver.
 On the example generation, notice the following:
 
 - `items_per_instant = 3`: this means on each instant or round, there will be 3 options available for the user/algorithm to choose from.
-
+- `delta = 0.3`: this means we'll use the first 30% of rounds to estimate an algorithm parameter (Z).
 |
 
 Great! Now lets solve the instance in an online fashion:

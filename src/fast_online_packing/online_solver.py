@@ -31,7 +31,7 @@ from fast_online_packing.packing_problem import PackingProblem
 
 
 class OnlineSolver:
-    """Solves the Online Stochastic Packing Problem.
+    """Solves the Online Packing Problem.
 
     Parameters
     ----------
@@ -195,7 +195,7 @@ class OnlineSolver:
         """
         return cost - self.p.get_capacity()/self.total_time
 
-    def pack_one(self, available_values: List[float], available_costs: List[List[float]]) -> None:
+    def pack_one(self, available_values: List[float], available_costs: List[List[float]]) -> int:
         """Receives the new instant's items and chooses one to pack.
 
         Parameters
@@ -204,6 +204,11 @@ class OnlineSolver:
             Value of the items available on the current instant.
         available_costs : list of list of float
             Cost vectors of the items available on the current instant.
+
+        Returns
+        -------
+        int
+            Index of the chosen item or -1 if none of the items were packed.
         """
         self.p.set_current_inputs(available_values, available_costs)
         chosen_idx = self._choose_index_to_pack(available_values, available_costs)
@@ -214,6 +219,7 @@ class OnlineSolver:
         mwu_gains = list(map(self._compute_mwu_gains, received_costs))
         self.mwu.update_weights(mwu_gains)
         self.current_time += 1
+        return chosen_idx
 
     def compute_optimum(self) -> float:
         """Solve the problem offline to find out the optimum solution.

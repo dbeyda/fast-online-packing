@@ -2,10 +2,10 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Instance Generator Module" href="instance_generator.html" /><link rel="prev" title="Offline Solvers Module" href="offline_solvers.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Helper Module" href="helper.html" /><link rel="prev" title="Instance Generator Module" href="instance_generator.html" />
 
     <meta name="generator" content="sphinx-3.5.4, furo 2021.04.11.beta34"/>
-        <title>Online Solver Module - Online Packing</title>
+        <title>Packing Problem Module - Fast Online Packing</title>
       <link rel="stylesheet" href="_static/styles/furo.css?digest=59ab60ac09ea94ccfe6deddff6d715cce948a6fc">
     <link rel="stylesheet" href="_static/pygments.css">
     <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
@@ -86,10 +86,10 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">Online Packing</div></a>
+      <a href="index.html"><div class="brand">Fast Online Packing</div></a>
     </div>
     <div class="header-right">
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
     </div>
@@ -100,7 +100,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">Online Packing</span>
+  <span class="sidebar-brand-text">Fast Online Packing</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html">
   <input class="sidebar-search" placeholder=Search name="q">
@@ -111,12 +111,12 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="online_solver.html">Packing Problem Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instance_generator.html">Instance Generator Module</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Packing Problem Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="helper.html">Helper Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mwu_max.html">MWU-Max Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="offline_solvers.html">Offline Solvers Module</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Online Solver Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="instance_generator.html">Instance Generator Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="online_solver.html">Online Solver Module</a></li>
 </ul>
 
 </div>
@@ -128,68 +128,30 @@
   <main class="main">
     <div class="content">
       <article role="main">
-        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
           <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
         </label>
-        <div class="section" id="module-online_solver">
-<span id="online-solver-module"></span><h1>Online Solver Module<a class="headerlink" href="#module-online_solver" title="Permalink to this headline">¶</a></h1>
-<p>This module contains an algorithm to solve the Online Packing Problem.</p>
-<div class="section" id="notes">
-<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h2>
-<p>The algorithm implemented here to solve the online packing problem
-is described in <a class="reference internal" href="#r4151a4d4760f-1" id="id1">[1]</a>, on section 6, as Algorithm 6.1. It uses the
-MWU (Multiplicative Weights Update) method, as described in
-<a class="reference internal" href="#r4151a4d4760f-2" id="id2">[2]</a>, and Integer/Linear prorgamming solvers. Hence the <cite>Mwu-Max</cite>
-and the <cite>Offline Solvers</cite> modules.</p>
-</div>
-<div class="section" id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<dl class="citation">
-<dt class="label" id="r4151a4d4760f-1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
-<dd><p>Agrawal, Shipra &amp; Devanur, Nikhil. (2014). Fast Algorithms for Online Stochastic Convex Programming. Proceedings of the Annual ACM-SIAM Symposium on Discrete Algorithms. 2015. 10.1137/1.9781611973730.93.</p>
-</dd>
-<dt class="label" id="r4151a4d4760f-2"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
-<dd><p>Arora, Sanjeev &amp; Hazan, Elad &amp; Kale, Satyen. (2012). The Multiplicative Weights Update Method: a Meta Algorithm and Applications. Theory of Computing [electronic only]. 8. 10.4086/toc.2012.v008a006.</p>
-</dd>
-</dl>
+        <div class="section" id="module-packing_problem">
+<span id="packing-problem-module"></span><h1>Packing Problem Module<a class="headerlink" href="#module-packing_problem" title="Permalink to this headline">¶</a></h1>
+<p>This module encapsulates and formalizes all aspects
+and rules of the Online Packing Problem.</p>
+<p>For each instant, the algorithm receives k options of items, each one with a value and a cost-vector.
+The algorithm chooses which option to pack, and then waits until receiving the options for
+the next instant. The algorithm can also choose to pack no items at a given instant. Also, it may not
+pack any item that that causes a violation of the capacity constraint in some dimension.</p>
 <dl class="py class">
-<dt id="online_solver.OnlineSolver">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">online_solver.</span></code><code class="sig-name descname"><span class="pre">OnlineSolver</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">cost_dimension:</span> <span class="pre">int</span></em>, <em class="sig-param"><span class="pre">total_time:</span> <span class="pre">int</span></em>, <em class="sig-param"><span class="pre">capacity:</span> <span class="pre">float</span></em>, <em class="sig-param"><span class="pre">e:</span> <span class="pre">Optional[float]</span> <span class="pre">=</span> <span class="pre">None</span></em>, <em class="sig-param"><span class="pre">solver_cls:</span> <span class="pre">Type[online_packing.offline_solvers.base_solver.BaseSolver]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'online_packing.offline_solvers.python_mip_solver.PythonMIPSolver'&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/online_solver.html#OnlineSolver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#online_solver.OnlineSolver" title="Permalink to this definition">¶</a></dt>
-<dd><p>Solves the Online Stochastic Packing Problem.</p>
+<dt id="packing_problem.PackingProblem">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">packing_problem.</span></code><code class="sig-name descname"><span class="pre">PackingProblem</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_dimension</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/packing_problem.html#PackingProblem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#packing_problem.PackingProblem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class that enforces all aspects of the
+online packing problem.</p>
+<p>This class is statefull, meaning it carries the current state
+of the game, and some methods depend on that state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>cost_dimension</strong><span class="classifier">int</span></dt><dd><p>Dimension of the cost vectors to be used.</p>
+<dt><strong>capacity</strong><span class="classifier">float or int</span></dt><dd><p>The capacity for the problem (same in every dimension).</p>
 </dd>
-<dt><strong>total_time</strong><span class="classifier">int</span></dt><dd><p>Total number of instants.</p>
-</dd>
-<dt><strong>capacity</strong><span class="classifier">float</span></dt><dd><p>Capacity restriction of the problem instance.</p>
-</dd>
-<dt><strong>e</strong><span class="classifier">float or None, default=None</span></dt><dd><p>Epsilon parameter to be used in the algorithm. If none is given,             a theorical optimum epsilon is set.</p>
-</dd>
-<dt><strong>solver_cls</strong><span class="classifier">Type[BaseSolver]</span></dt><dd><p>Offline solver to be used.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Attributes</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>p</strong><span class="classifier">PackingProblem</span></dt><dd><p>Packing Problem instance, that holds and enforces all problem-related aspects.</p>
-</dd>
-<dt><strong>e</strong><span class="classifier">float</span></dt><dd><p>Epsilon parameter used in the algorithm.</p>
-</dd>
-<dt><strong>mwu</strong><span class="classifier">MwuMax</span></dt><dd><p>MWU instance.</p>
-</dd>
-<dt><strong>z</strong><span class="classifier">Union[float, None]</span></dt><dd><p>Algorithm calculated parameter Z.</p>
-</dd>
-<dt><strong>delta</strong><span class="classifier">float</span></dt><dd><p>Decimal fraction of instants used to estimate Z.</p>
-</dd>
-<dt><strong>total_time</strong><span class="classifier">int</span></dt><dd><p>Total number of instants in the algorithm.</p>
-</dd>
-<dt><strong>current_time</strong><span class="classifier">int</span></dt><dd><p>Count of the instant the algorithm currently is. 1-indexed.</p>
-</dd>
-<dt><strong>optimum_value</strong><span class="classifier">float</span></dt><dd><p>Sum of the values of the items packed in the optimal solution (solving offline).</p>
-</dd>
-<dt><strong>cost_dimension</strong><span class="classifier">int</span></dt><dd><p>Property that gets the dimension of the problem instance’s cost vectors.</p>
+<dt><strong>cost_dimension</strong><span class="classifier">int</span></dt><dd><p>The dimension of the cost vector.</p>
 </dd>
 </dl>
 </dd>
@@ -197,126 +159,183 @@ and the <cite>Offline Solvers</cite> modules.</p>
 <p class="rubric">Methods</p>
 <div class="table-wrapper"><table class="docutils align-default">
 <colgroup>
-<col style="width: 28%"/>
-<col style="width: 72%"/>
+<col style="width: 32%"/>
+<col style="width: 68%"/>
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><strong>print_params()</strong></p></td>
-<td><p>Print parameters used in the algorithm.</p></td>
+<tr class="row-odd"><td><p><strong>set_current_inputs(values, costs)</strong></p></td>
+<td><p>Set items’ values and costs for the current instant.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>pack_one(available_values, available_costs)</strong></p></td>
-<td><p>Choose one of the given items to pack on the current instant.</p></td>
+<tr class="row-even"><td><p><strong>item_fits(idx)</strong></p></td>
+<td><p>Checks if current instant’s item of index <cite>idx</cite> fits in capacity constraints.</p></td>
 </tr>
-<tr class="row-odd"><td><p><strong>compute_optimum()</strong></p></td>
-<td><p>Solves the offline problem for the previously set instants,             in order to find the optimum solution.</p></td>
+<tr class="row-odd"><td><p><strong>pack(idx)</strong></p></td>
+<td><p>Pack current instant’s item of index <cite>idx</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>print_result()</strong></p></td>
-<td><p>Print a results report.</p></td>
+<tr class="row-even"><td><p><strong>end_packing()</strong></p></td>
+<td><p>Ends the packing phase.</p></td>
 </tr>
-<tr class="row-odd"><td><p><strong>get_premises_min()</strong></p></td>
-<td><p>Gets the minimum value of the capacity and optimum-value-sum so that             premises and theoric guarantees are valid.</p></td>
+<tr class="row-odd"><td><p><strong>get_capacity()</strong></p></td>
+<td><p>Get capacity of the problem instance.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>respect_premises()</strong></p></td>
-<td><p>Informs if the algorithm is in agreement with the theoric premises.</p></td>
+<tr class="row-even"><td><p><strong>get_options_per_instant()</strong></p></td>
+<td><p>Get the number of available items in each instant.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>get_available_values()</strong></p></td>
+<td><p>Get the value of the items that are available for the current instant.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>get_available_costs()</strong></p></td>
+<td><p>Get the cost of the items that are available for the current instant.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>get_cost_dimension()</strong></p></td>
+<td><p>Get the dimension of the cost vectors.</p></td>
 </tr>
 </tbody>
 </table></div>
 <dl class="py method">
-<dt id="online_solver.OnlineSolver.compute_optimum">
-<code class="sig-name descname"><span class="pre">compute_optimum</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> → <span class="pre">float</span><a class="reference internal" href="_modules/online_solver.html#OnlineSolver.compute_optimum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#online_solver.OnlineSolver.compute_optimum" title="Permalink to this definition">¶</a></dt>
-<dd><p>Solve the problem offline to find out the optimum solution.</p>
+<dt id="packing_problem.PackingProblem.get_available_costs">
+<code class="sig-name descname"><span class="pre">get_available_costs</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> → <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/packing_problem.html#PackingProblem.get_available_costs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#packing_problem.PackingProblem.get_available_costs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get costs of all the available items for past and current instants.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><dl class="simple">
-<dt>The optimum solution for the problem.</dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py method">
-<dt id="online_solver.OnlineSolver.get_premises_min">
-<code class="sig-name descname"><span class="pre">get_premises_min</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> → <span class="pre">float</span><a class="reference internal" href="_modules/online_solver.html#OnlineSolver.get_premises_min"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#online_solver.OnlineSolver.get_premises_min" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the minimum value of capacity and <cite>optimum_value</cite> for the
-premises to be valid.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><dl class="simple">
-<dt>float</dt><dd><p>Minimum value of capacity and <cite>optimum_value</cite> for premises to be valid.</p>
+<dt>list of list of list of (int or float)</dt><dd><p>List contianing, for each instant, a list with the cost vectors of the available items for             that instant.</p>
 </dd>
 </dl>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py method">
-<dt id="online_solver.OnlineSolver.pack_one">
-<code class="sig-name descname"><span class="pre">pack_one</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">available_values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">available_costs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> → <span class="pre">None</span><a class="reference internal" href="_modules/online_solver.html#OnlineSolver.pack_one"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#online_solver.OnlineSolver.pack_one" title="Permalink to this definition">¶</a></dt>
-<dd><p>Receives the new instant’s items and chooses one to pack.</p>
+<dt id="packing_problem.PackingProblem.get_available_values">
+<code class="sig-name descname"><span class="pre">get_available_values</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> → <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/packing_problem.html#PackingProblem.get_available_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#packing_problem.PackingProblem.get_available_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get values of all the available items for past and current instants.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>list of list of (int or float)</dt><dd><p>List contianing, for each instant, a list with the values of the available items for             that instant.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="packing_problem.PackingProblem.get_capacity">
+<code class="sig-name descname"><span class="pre">get_capacity</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> → <span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/packing_problem.html#PackingProblem.get_capacity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#packing_problem.PackingProblem.get_capacity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the problem capacity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>int or float</dt><dd><p>Previously set problem capacity.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="packing_problem.PackingProblem.get_cost_dimension">
+<code class="sig-name descname"><span class="pre">get_cost_dimension</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/packing_problem.html#PackingProblem.get_cost_dimension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#packing_problem.PackingProblem.get_cost_dimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the dimension of the cost vectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>int</dt><dd><p>The dimension of the cost vectors.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="packing_problem.PackingProblem.get_options_per_instant">
+<code class="sig-name descname"><span class="pre">get_options_per_instant</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> → <span class="pre">int</span><a class="reference internal" href="_modules/packing_problem.html#PackingProblem.get_options_per_instant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#packing_problem.PackingProblem.get_options_per_instant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of available items per instant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>int</dt><dd><p>Number of available items per instant.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="packing_problem.PackingProblem.item_fits">
+<code class="sig-name descname"><span class="pre">item_fits</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> → <span class="pre">bool</span><a class="reference internal" href="_modules/packing_problem.html#PackingProblem.item_fits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#packing_problem.PackingProblem.item_fits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that currently available item of index <cite>idx</cite> fits the capacity constriants.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>available_values</strong><span class="classifier">list of float</span></dt><dd><p>Value of the items available on the current instant.</p>
+<dt><strong>idx</strong><span class="classifier">int</span></dt><dd><p>Index of the item to be verified.</p>
 </dd>
-<dt><strong>available_costs</strong><span class="classifier">list of list of float</span></dt><dd><p>Cost vectors of the items available on the current instant.</p>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>bool</dt><dd><p>True if the item fits the constraints, False otherwise.</p>
 </dd>
 </dl>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py method">
-<dt id="online_solver.OnlineSolver.print_params">
-<code class="sig-name descname"><span class="pre">print_params</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/online_solver.html#OnlineSolver.print_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#online_solver.OnlineSolver.print_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print algorithm parameters.</p>
-</dd></dl>
-<dl class="py method">
-<dt id="online_solver.OnlineSolver.print_result">
-<code class="sig-name descname"><span class="pre">print_result</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> → <span class="pre">None</span><a class="reference internal" href="_modules/online_solver.html#OnlineSolver.print_result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#online_solver.OnlineSolver.print_result" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print usefull information about the algorithm execution.</p>
-</dd></dl>
-<dl class="py method">
-<dt id="online_solver.OnlineSolver.respect_premises">
-<code class="sig-name descname"><span class="pre">respect_premises</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> → <span class="pre">bool</span><a class="reference internal" href="_modules/online_solver.html#OnlineSolver.respect_premises"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#online_solver.OnlineSolver.respect_premises" title="Permalink to this definition">¶</a></dt>
-<dd><p>Informs if both the algorithm premises (<cite>optimum_value</cite> and capacity) were fulfilled.</p>
+<dt id="packing_problem.PackingProblem.pack">
+<code class="sig-name descname"><span class="pre">pack</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> → <span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/packing_problem.html#PackingProblem.pack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#packing_problem.PackingProblem.pack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pack item of index <cite>idx</cite>, from the currently available.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt>bool</dt><dd><p>True if both premises were fulfilled, False otherwise.</p>
+<dt><strong>idx</strong><span class="classifier">int</span></dt><dd><p>Index of the item to pack.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>int or float</dt><dd><p>Total value of the packed items so far.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>Exception</dt><dd><p>An item was already packed for the current instant.</p>
+</dd>
+<dt>Exception</dt><dd><p>Index for the item out of bounds.</p>
+</dd>
+<dt>Exception</dt><dd><p>Chosen item  exceed capacity in some dimension.</p>
 </dd>
 </dl>
 </dd>
 </dl>
 </dd></dl>
 </dd></dl>
-</div>
 </div>
 
       </article>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="instance_generator.html">
+          <a class="next-page" href="helper.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Instance Generator Module</div>
+                <div class="title">Helper Module</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="offline_solvers.html">
+          <a class="prev-page" href="instance_generator.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Offline Solvers Module</div>
+                <div class="title">Instance Generator Module</div>
                 
               </div>
             </a>
         </div>
 
         <div class="related-information">
-              Copyright &#169; 2021, David
+              Copyright &#169; 2021, David Beyda
             |
             Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
               and
@@ -331,28 +350,8 @@ premises to be valid.</p>
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            Contents
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">Online Solver Module</a><ul>
-<li><a class="reference internal" href="#notes">Notes</a></li>
-<li><a class="reference internal" href="#references">References</a></li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>

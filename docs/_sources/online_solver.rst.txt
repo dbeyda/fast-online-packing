@@ -1,4 +1,4 @@
-Packing Problem Module
+Online Solver Module
 ==========================================
-.. automodule:: packing_problem
+.. automodule:: online_solver
    :members:

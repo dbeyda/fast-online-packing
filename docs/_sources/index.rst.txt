@@ -1,38 +1,37 @@
-Welcome to Online Packing's API Reference!
+Fast Online Packing Docs and API Reference
 ==========================================
 
-This package aims to solve the Online Stochastic Packing Problem,
-based on the algorithm given by Agrawal and Devanur [1]_.
+This package aims to solve the Online Packing Problem, under the
+random order model, and is an implementation of the algorithm
+presented by Agrawal and Devanur [1]_.
 
-What is an Online Stochastic Packing Problem?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+What is an Online Packing Problem?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-**Introducing the Knapsack Problem.** If you are here, you probably heard of the `Knapsack Problem`_: given a set of
+**The Knapsack Problem.** If you are here, you probably heard of the `Knapsack Problem`_: given a set of
 items (each one with it's own value and weight), choose which items to pack
 in order to maximize the value that fits the backpack's weight restriction.
-Notice each item has a value and a "cost", which we have a restriction on.
-On this variation of the problem, there is only one unit of each item for you
-to pack (0-1 Knapsack Problem). Ok?
+Notice each item has a "cost" (weight), which we have a restriction on. Also, consider
+you can only pack, at maximum, one copy of each item.
 
-**Get Multidimensional**. Now let's get into the Multidimensional Knapsack Problem: it's the same as the above,
+**Multidimensional Costs**. Now let's get into the Multidimensional Knapsack Problem: it's the same as the above,
 but the items cost is now a vector, meaning the cost has more than one dimension.
-You can interpret this as "the backpack is 2D now", or as two separate restrictions:
-one for the weight, another on the item prices, because your budget is limited.
-Notice the cost vector can have any positive number of dimensions, but it's still a vector.
+You can interpret each dimension as separate restriction. For example, we could have a cost vector of 
+2 dimensions, one for the items' weights, another for the items' prices.
 
 **What about the Online part?** A problem is called online when you have limited information about
 the problem and you have to make a choice using only the little information you have. In the
 future, more information will be revealed, you will be asked to make other choices, but past choices cannot be changed.
 
-**The complete picture**. The problem develops in rounds. On each round, you will be
-presented `k` items (each one has a value and a cost vector). You have to choose if you want
-to pack an item, and which one do you want to pack. You have a capacity `B` in every cost dimension.
-The objective is to maximize the packed value, without exceeding the capacity `B` in
-any dimension.
+**The complete picture**. The problem develops in rounds. On each round, `k` items are presented to the
+algorithm. The algorithm should pack zero or one of the presented items, before proceeding to the next round.
+We have a restriction of `B` in every cost dimension (sum of packed items costs for any dimension must
+be lower or equal to `B`). The objective is to maximize the packed value, without exceeding the
+restriction of `B` in any dimension.
 
 The online problem is harder because the user can not see all the items beforehand,
 like in the offline problem. The items are presented in rounds. Thats why
-the common Dinamic Programming solution does not work, and basic greedy strategies also
+the common Dynamic Programming approach does not work, and basic greedy strategies also
 perform poorly.
 
 **But the items' values and costs need to follow a known probability distribuiton, right?**
@@ -43,7 +42,7 @@ and costs are between 0 and 1. Regarding the random order input, you can think o
 #. An adversary carefully and maliciously assembles every round's items.
 #. The rounds order is randomized.
 #. The rounds are revealed one at a time to us.
-#. On each round, we have to choose which item to pack, before moving to the next round. 
+#. On each round, we have to pack zero or one item, before moving to the next round. 
 
 .. _Knapsack Problem: https://en.wikipedia.org/wiki/Knapsack_problem
 
@@ -56,12 +55,12 @@ and costs are between 0 and 1. Regarding the random order input, you can think o
 
    install
    quickstart
-   online_solver
+   instance_generator
+   packing_problem
    helper
    mwu_max
    offline_solvers
-   packing_problem
-   instance_generator
+   online_solver
 
 
 References
