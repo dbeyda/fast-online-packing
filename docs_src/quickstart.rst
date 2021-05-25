@@ -35,6 +35,7 @@ On the example generation, notice the following:
 
 - `items_per_instant = 3`: this means on each instant or round, there will be 3 options available for the user/algorithm to choose from.
 - `delta = 0.3`: this means we'll use the first 30% of rounds to estimate an algorithm parameter (Z).
+
 |
 
 Great! Now lets solve the instance in an online fashion:
@@ -106,7 +107,7 @@ Full code below:
     values, costs, cap, e = generator.generate_valid_instance(
         delta, n_instants, cost_dim, items_per_instant=3)
 
-    s = OnlineSolver(cost_dim, n_instants, cap, e, PythonMIPSolver)
+    s = OnlineSolver(cost_dim, n_instants, cap, e)
 
     print("\n>> Online solver parameters:")
     s.print_params()

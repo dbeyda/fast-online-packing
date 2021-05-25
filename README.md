@@ -79,7 +79,7 @@ values, costs, cap, e = generator.generate_valid_instance(
     delta, n_instants, cost_dim, items_per_instant=3)
 
 # instantiate the solver
-s = OnlineSolver(cost_dim, n_instants, cap, e, PythonMIPSolver)
+s = OnlineSolver(cost_dim, n_instants, cap, e)
 
 for v, c in zip(values, costs):
     # ask the solver which item should we pack
