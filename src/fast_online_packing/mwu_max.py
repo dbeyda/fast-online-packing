@@ -9,7 +9,7 @@ import copy
 
 
 class MwuMax:
-    """Class that implements MWU-max algorithm.
+    """Class that implements MWU-max algorithm, adapted for gains in range [-1, 1]
 
     Parameters
     ----------
@@ -67,7 +67,10 @@ class MwuMax:
         assert len(expert_gains) == self._n_experts
 
         for i in range(self._n_experts):
-            self._weights[i] *= (1 + self._eps * expert_gains[i])
+            if expert_gains[i] >= 0:
+                self._weights[i] *= (1 + self._eps)**expert_gains[i]
+            else:
+                self._weights[i] *= (1 - self._eps)**(-expert_gains[i])
         # we sum an extra 1 that is the extra expert weight
         sum_weights = sum(self._weights)+1
         for i in range(self._n_experts):
