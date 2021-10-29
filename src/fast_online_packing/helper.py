@@ -3,7 +3,7 @@
 from typing import List, Union
 
 
-def dot_product(a: List[Union[int, float]], b: List[Union[int, float]]) -> Union[int, float]:
+def dot_product(a: List[Union[int, float]], b: List[Union[int, float]]) -> float:
     """Compute dot product between two vectors.
 
     Parameters

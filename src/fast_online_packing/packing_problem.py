@@ -1,13 +1,14 @@
 """This module encapsulates and formalizes all aspects
 and rules of the Online Packing Problem.
 
-For each instant, the algorithm receives k options of items, each one with a value and a cost-vector.
+For each instant, the algorithm receives k options of items, each one with a reward and a cost-vector.
 The algorithm chooses which option to pack, and then waits until receiving the options for
-the next instant. The algorithm can also choose to pack no items at a given instant. Also, it may not
-pack any item that that causes a violation of the capacity constraint in some dimension.
+the next instant. The algorithm can also choose to pack no items at a given instant. Also, it cannot
+pack any item that that causes a violation of the capacity constraint in some dimension of the cost-vector.
 """
 from typing import List, Union
 import copy
+from fast_online_packing.item import Item
 
 
 class PackingProblem:
@@ -20,7 +21,7 @@ class PackingProblem:
     Parameters
     ----------
     capacity : float or int
-        The capacity for the problem (same in every dimension).
+        The maximum ocupation for the problem (it is the same for every cost dimension).
     cost_dimension : int
         The dimension of the cost vector.
 
@@ -32,8 +33,6 @@ class PackingProblem:
         Checks if current instant's item of index `idx` fits in capacity constraints.
     pack(idx)
         Pack current instant's item of index `idx`.
-    end_packing()
-        Ends the packing phase.
     get_capacity()
         Get capacity of the problem instance.
     get_options_per_instant()
@@ -41,31 +40,29 @@ class PackingProblem:
     get_available_values()
         Get the value of the items that are available for the current instant.
     get_available_costs()
-        Get the cost of the items that are available for the current instant.
+        Get the cost-vectors of the items that are available for the current instant.
     get_cost_dimension()
         Get the dimension of the cost vectors.
     """
 
-    _capacity: Union[int, float]
+    _capacity: float
     _packed_items: List[int]
-    _packed_value_sum: Union[int, float]
-    _packed_costs_sum: List[Union[int, float]]
+    _packed_value_sum: float
+    _packed_costs_sum: List[float]
     _cost_dimension: int
     _options_per_instant: int
-    # inputs seen in until current time
-    # values: 1st index = day   //   2nd index = item value
-    _available_values: List[List[Union[int, float]]]
-    # costs: 1st index = day   //   2nd index = item costs vector   //   3rd index = item cost dimension
-    _available_costs: List[List[List[Union[int, float]]]]
+    # revealed_instants: inputs seen in until current time
+    # 1st index = instant   //   2nd index = item
+    _revealed_instants: List[List[Item]]
 
     def __init__(self, capacity: Union[float, int], cost_dimension: int):
         self._packed_value_sum = 0.0
         self._capacity = -1
         self._set_capacity(capacity)
         self._set_cost_dimension(cost_dimension)
-        self._available_values = list()
-        self._available_costs = list()
         self._packed_items = list()
+        self._options_per_instant = 0
+        self._revealed_instants = list()
 
     def _set_cost_dimension(self, cost_dimension: int) -> None:
         """Validates cost dimension and sets cost dimension.
@@ -104,9 +101,9 @@ class PackingProblem:
         elif self._capacity >= 0-1e-6:
             raise Exception(f"Capacity already set (capacity={self._capacity}).")
         else:
-            self._capacity = capacity
+            self._capacity = float(capacity)
 
-    def get_capacity(self) -> Union[int, float]:
+    def get_capacity(self) -> float:
         """Get the problem capacity.
 
         Returns
@@ -126,45 +123,34 @@ class PackingProblem:
         """
         return self._options_per_instant
 
-    def _validate_curr_inputs(self,
-                              values: List[Union[int, float]],
-                              costs: List[List[Union[int, float]]]) -> None:
-        if len(values) != len(costs):
-            raise Exception("len(values) != len(costs)")
-        # validate values between 0 and 1:
-        for v in values:
-            if v < 0.0 - 1e-6 or v > 1 + 1e-6:
-                raise Exception(
-                    "Option values must be in range [0, 1].")
-        for option in costs:
-            if len(option) != self._cost_dimension:
-                raise Exception("Received a cost vector with different dimension from previously seen.")
-            for cost in option:
-                if cost < 0 - 1e-6 or cost > 1 + 1e-6:
-                    raise Exception("All option costs must in range [0, 1].")
-        # validate number of options and cost-dimensions match previously seen:
-        if len(self._available_values) > 0:
-            if len(values) != self._options_per_instant:
-                raise Exception(
-                    "Number of available options in values in different from previously seen options.")
-            if len(costs) != self._options_per_instant:
-                raise Exception(
-                    "Number of available options in costs is different from previously seen options.")
-
-    def set_current_inputs(self, values: List[Union[int, float]],
-                           costs: List[List[Union[int, float]]]) -> None:
-        if len(self._packed_items) < len(self._available_values):
+    # TODO move item validation to Item class
+    def _validate_curr_inputs(self, items: List[Item]) -> None:
+        if self._options_per_instant and (len(items) != self._options_per_instant):
             raise Exception(
-                "Tried to set next instant without choosing an option for the current instant.")
-        self._validate_curr_inputs(values, costs)
-        self._available_values.append(values)
-        self._available_costs.append(costs)
-        if len(self._available_values) == 1:
-            self._options_per_instant = len(values)
+                f"Error: algorithm started with {self._options_per_instant} items per instant,\
+                 but received {len(items)}.")
+        for item in items:
+            # validate rewards between 0 and 1:
+            if item.reward < 0.0 - 1e-6 or item.reward > 1 + 1e-6:
+                raise Exception("Error: item's rewards must be in the range [0, 1].")
+            if item.cost_dim != self._cost_dimension:
+                raise Exception("Error: received an item with a different cost dimension.")
+            for c in item.costs:
+                if c < 0 - 1e-6 or c > 1 + 1e-6:
+                    raise Exception("Error: item's costs must be in range range [0, 1].")
+
+    def set_current_inputs(self, items: List[Item]) -> None:
+        if len(self._packed_items) < len(self._revealed_instants):
+            raise Exception(
+                "Error: tried to set next instant's items without picking an item for the current instant.")
+        self._validate_curr_inputs(items)
+        self._revealed_instants.append(items)
+        if len(self._revealed_instants) == 1:
+            self._options_per_instant = len(items)
             self._packed_costs_sum = [0.0 for _ in range(self._cost_dimension)]
 
     def item_fits(self, idx: int) -> bool:
-        """Checks that currently available item of index `idx` fits the capacity constriants.
+        """Checks that item with index `idx`from current instant fits the capacity constriants.
 
         Parameters
         ----------
@@ -178,12 +164,13 @@ class PackingProblem:
         """
         if idx == -1:
             return True
-        for dim in range(self._cost_dimension):
-            if self._available_costs[-1][idx][dim] + self._packed_costs_sum[dim] > self._capacity + 1e-6:
+        item = self._revealed_instants[-1][idx]
+        for j in range(self._cost_dimension):
+            if item.costs[j] + self._packed_costs_sum[j] > self._capacity + 1e-6:
                 return False
         return True
 
-    def pack(self, idx: int) -> Union[int, float]:
+    def pack(self, idx: int) -> float:
         """Pack item of index `idx`, from the currently available.
 
         Parameters
@@ -193,8 +180,8 @@ class PackingProblem:
 
         Returns
         -------
-        int or float
-            Total value of the packed items so far.
+        float
+            Sum of rewards of the items packed so far.
 
         Raises
         ------
@@ -205,11 +192,13 @@ class PackingProblem:
         Exception
             Chosen item  exceed capacity in some dimension.
         """
-        if len(self._available_values) == len(self._packed_items):
+        if len(self._revealed_instants) == len(self._packed_items):
             raise Exception(
-                "Packing already made. Currently waiting for the next input.")
+                "Error: already packed an item for the current instant. You must reveal the next instant in\
+                     order to continue packing.")
         elif idx < -1 or idx > self._options_per_instant-1:
-            raise Exception(f"Tried to pack item out of bounds. Available indexes to pack are [0, ..., \
+            raise Exception(
+                f"Error: tried to pack item of index {idx} which is out of bounds. Available indexes to pack are [0, ..., \
                 {self._options_per_instant-1}] or -1 to pack no items.")
 
         # pack chosen item
@@ -218,34 +207,43 @@ class PackingProblem:
             return self._packed_value_sum
         elif self.item_fits(idx):
             self._packed_items.append(idx)
-            for dim in range(self._cost_dimension):
-                self._packed_costs_sum[dim] += self._available_costs[-1][idx][dim]
-            self._packed_value_sum += self._available_values[-1][idx]
+            for j in range(self._cost_dimension):
+                self._packed_costs_sum[j] += self._revealed_instants[-1][idx].costs[j]
+            self._packed_value_sum += self._revealed_instants[-1][idx].reward
             return self._packed_value_sum
         else:
-            raise Exception("Tried to pack an item that exceeds capacity in some dimension")
+            raise Exception("Error: tried to pack an item that exceeds capacity in some dimension.")
 
-    def get_available_values(self) -> List[List[Union[int, float]]]:
+    def get_available_values(self) -> List[List[float]]:
         """Get values of all the available items for past and current instants.
 
         Returns
         -------
-        list of list of (int or float)
+        list of list of float
             List contianing, for each instant, a list with the values of the available items for \
             that instant.
         """
-        return copy.deepcopy(self._available_values)
+        return [
+            [item.reward for item in instant]
+            for instant in self._revealed_instants
+        ]
 
     def get_available_costs(self) -> List[List[List[Union[int, float]]]]:
         """Get costs of all the available items for past and current instants.
 
         Returns
         -------
-        list of list of list of (int or float)
+        list of list of list of float
             List contianing, for each instant, a list with the cost vectors of the available items for \
             that instant.
         """
-        return copy.deepcopy(self._available_costs)
+        return [
+            [item.costs for item in instant]
+            for instant in self._revealed_instants
+        ]
+
+    def get_revealed_instants(self) -> List[List[Item]]:
+        return copy.deepcopy(self._revealed_instants)
 
     def get_cost_dimension(self):
         """Get the dimension of the cost vectors.

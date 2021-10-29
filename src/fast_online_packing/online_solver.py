@@ -28,6 +28,7 @@ from fast_online_packing import helper
 from fast_online_packing.offline_solvers.base_solver import BaseSolver
 from fast_online_packing.offline_solvers.python_mip_solver import PythonMIPSolver
 from fast_online_packing.packing_problem import PackingProblem
+from fast_online_packing.item import Item
 
 
 class OnlineSolver:
@@ -95,7 +96,6 @@ class OnlineSolver:
     current_time: int
     optimum_value: float
 
-    # TODO: receive different solvers in this function
     def __init__(self, cost_dimension: int, total_time: int, capacity: float, e: Union[float, None] = None,
                  solver_cls: Type[BaseSolver] = PythonMIPSolver):
         self.z = None
@@ -151,16 +151,13 @@ class OnlineSolver:
         s.solve()
         return 2 * s.optimum_value / (self.delta * self.p.get_capacity())
 
-    def _choose_index_to_pack(self, available_values: List[float],
-                              available_costs: List[List[float]]) -> int:
+    def _choose_index_to_pack(self, current_items: List[Item]) -> int:
         """Given available items for an instant, chooses which item to pack.
 
         Parameters
         ----------
-        available_values : list of float
-            Value of the items available on the current instant.
-        available_costs : list of list of float
-            Cost vectors of the items available on the current instant.
+        current_items : list of float
+            List of the items available on the current instant.
 
         Returns
         -------
@@ -168,13 +165,13 @@ class OnlineSolver:
             Index of the item with the highest evaluated value.
         """
         if self.current_time <= self._initial_phase_size:
-            return random.randint(-1, len(available_values)-1)
+            return random.randint(-1, len(current_items)-1)
         else:
             if self.z is None:
                 self.z = self._compute_z()
-            evaluated_options = [available_values[i]
-                                 - self.z * helper.dot_product(self.mwu.get_probs(), available_costs[i])
-                                 for i in range(len(available_values))]
+            evaluated_options = [item.reward
+                                 - self.z * helper.dot_product(self.mwu.get_probs(), item.costs)
+                                 for item in current_items]
             # item that has the highest evaluated value from evaluated_options
             max_idx, max_value = max(enumerate(evaluated_options), key=itemgetter(1))
             # evaluate if its worth to get the item or not
@@ -210,12 +207,13 @@ class OnlineSolver:
         int
             Index of the chosen item or -1 if none of the items were packed.
         """
-        self.p.set_current_inputs(available_values, available_costs)
-        chosen_idx = self._choose_index_to_pack(available_values, available_costs)
+        current_items = [Item(r, c) for r, c in zip(available_values, available_costs)]
+        self.p.set_current_inputs(current_items)
+        chosen_idx = self._choose_index_to_pack(current_items)
         if not self.p.item_fits(chosen_idx):
             chosen_idx = -1
         self.p.pack(chosen_idx)
-        received_costs = available_costs[chosen_idx] if chosen_idx != -1 else [0]*self.cost_dimension
+        received_costs = current_items[chosen_idx].costs if chosen_idx != -1 else [0]*self.cost_dimension
         mwu_gains = list(map(self._compute_mwu_gains, received_costs))
         self.mwu.update_weights(mwu_gains)
         self.current_time += 1
