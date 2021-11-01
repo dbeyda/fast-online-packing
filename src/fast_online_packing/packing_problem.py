@@ -35,33 +35,32 @@ class PackingProblem:
         Pack current instant's item of index `idx`.
     get_capacity()
         Get capacity of the problem instance.
-    get_options_per_instant()
-        Get the number of available items in each instant.
     get_available_values()
         Get the value of the items that are available for the current instant.
     get_available_costs()
         Get the cost-vectors of the items that are available for the current instant.
-    get_cost_dimension()
+    cost_dimension
         Get the dimension of the cost vectors.
     """
+    # TODO: document items_per_instant property
 
     _capacity: float
     _packed_items: List[int]
-    _packed_value_sum: float
+    _packed_rewards_sum: float
     _packed_costs_sum: List[float]
     _cost_dimension: int
-    _options_per_instant: int
+    _items_per_instant: int
     # revealed_instants: inputs seen in until current time
     # 1st index = instant   //   2nd index = item
     _revealed_instants: List[List[Item]]
 
     def __init__(self, capacity: Union[float, int], cost_dimension: int):
-        self._packed_value_sum = 0.0
+        self._packed_rewards_sum = 0.0
         self._capacity = -1
         self._set_capacity(capacity)
         self._set_cost_dimension(cost_dimension)
         self._packed_items = list()
-        self._options_per_instant = 0
+        self._items_per_instant = 0
         self._revealed_instants = list()
 
     def _set_cost_dimension(self, cost_dimension: int) -> None:
@@ -103,7 +102,8 @@ class PackingProblem:
         else:
             self._capacity = float(capacity)
 
-    def get_capacity(self) -> float:
+    @property
+    def capacity(self) -> float:
         """Get the problem capacity.
 
         Returns
@@ -113,7 +113,8 @@ class PackingProblem:
         """
         return self._capacity
 
-    def get_options_per_instant(self) -> int:
+    @property
+    def items_per_instant(self) -> int:
         """Get the number of available items per instant.
 
         Returns
@@ -121,13 +122,21 @@ class PackingProblem:
         int
             Number of available items per instant.
         """
-        return self._options_per_instant
+        return self._items_per_instant
+
+    @property
+    def packed_rewards_sum(self) -> float:
+        return self._packed_rewards_sum
+
+    @property
+    def packed_costs_sum(self) -> List[float]:
+        return self._packed_costs_sum
 
     # TODO move item validation to Item class
     def _validate_curr_inputs(self, items: List[Item]) -> None:
-        if self._options_per_instant and (len(items) != self._options_per_instant):
+        if self._items_per_instant and (len(items) != self._items_per_instant):
             raise Exception(
-                f"Error: algorithm started with {self._options_per_instant} items per instant,\
+                f"Error: algorithm started with {self._items_per_instant} items per instant,\
                  but received {len(items)}.")
         for item in items:
             # validate rewards between 0 and 1:
@@ -146,7 +155,7 @@ class PackingProblem:
         self._validate_curr_inputs(items)
         self._revealed_instants.append(items)
         if len(self._revealed_instants) == 1:
-            self._options_per_instant = len(items)
+            self._items_per_instant = len(items)
             self._packed_costs_sum = [0.0 for _ in range(self._cost_dimension)]
 
     def item_fits(self, idx: int) -> bool:
@@ -196,21 +205,21 @@ class PackingProblem:
             raise Exception(
                 "Error: already packed an item for the current instant. You must reveal the next instant in\
                      order to continue packing.")
-        elif idx < -1 or idx > self._options_per_instant-1:
+        elif idx < -1 or idx > self._items_per_instant-1:
             raise Exception(
                 f"Error: tried to pack item of index {idx} which is out of bounds. Available indexes to pack are [0, ..., \
-                {self._options_per_instant-1}] or -1 to pack no items.")
+                {self._items_per_instant-1}] or -1 to pack no items.")
 
         # pack chosen item
         if idx == -1:
             self._packed_items.append(idx)
-            return self._packed_value_sum
+            return self._packed_rewards_sum
         elif self.item_fits(idx):
             self._packed_items.append(idx)
             for j in range(self._cost_dimension):
                 self._packed_costs_sum[j] += self._revealed_instants[-1][idx].costs[j]
-            self._packed_value_sum += self._revealed_instants[-1][idx].reward
-            return self._packed_value_sum
+            self._packed_rewards_sum += self._revealed_instants[-1][idx].reward
+            return self._packed_rewards_sum
         else:
             raise Exception("Error: tried to pack an item that exceeds capacity in some dimension.")
 
@@ -245,7 +254,8 @@ class PackingProblem:
     def get_revealed_instants(self) -> List[List[Item]]:
         return copy.deepcopy(self._revealed_instants)
 
-    def get_cost_dimension(self):
+    @property
+    def cost_dimension(self):
         """Get the dimension of the cost vectors.
 
         Returns

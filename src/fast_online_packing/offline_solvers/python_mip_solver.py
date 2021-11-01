@@ -76,19 +76,19 @@ class PythonMIPSolver(BaseSolver):
         m.verbose = 0
         # creating variables for all instants and options
         x = [[m.add_var(name=f"x[{t}][{opt}]", var_type=BINARY)
-              for opt in range(self._options_per_instant)]
+              for opt in range(self._items_per_instant)]
              for t in range(self._size)]
         # setting capacity constraint
         for dim in range(self._cost_dimension):
             m += xsum(self._costs[i][item][dim]*x[i][item]
-                      for item in range(self._options_per_instant)
+                      for item in range(self._items_per_instant)
                       for i in range(self._size)) <= self._capacity  # type: ignore
         # setting constraint to only choose one item per instant
         for t in range(self._size):
-            m += xsum(x[t][i] for i in range(self._options_per_instant)) <= 1  # type: ignore
+            m += xsum(x[t][i] for i in range(self._items_per_instant)) <= 1  # type: ignore
         # setting objective function
         m.objective = maximize(xsum(self._values[i][item]*x[i][item]
-                                    for item in range(self._options_per_instant)
+                                    for item in range(self._items_per_instant)
                                     for i in range(self._size)))
 
     def solve(self):
@@ -105,8 +105,8 @@ class PythonMIPSolver(BaseSolver):
             self.optimum_value = self.solver.objective_value
             for idx, v in enumerate(self.solver.vars):
                 if abs(v.x) > 1e-6:  # chosen options for an instant are the positive variables
-                    chosen_idx = idx % self._options_per_instant
-                    time_instant = idx // self._options_per_instant
+                    chosen_idx = idx % self._items_per_instant
+                    time_instant = idx // self._items_per_instant
                     self.packed_items[time_instant] = chosen_idx
             for t, packed_idx in enumerate(self.packed_items):
                 if t >= 0:

@@ -14,13 +14,13 @@ class TestPackingProblem:
 
     def test_get_capacity(self):
         p = packing_problem.PackingProblem(25.5, 5)
-        assert 25.5 - 1e-6 <= p.get_capacity() <= 25.5 + 1e-6
+        assert 25.5 - 1e-6 <= p.capacity <= 25.5 + 1e-6
         p = packing_problem.PackingProblem(3, 5)
-        assert p.get_capacity() == 3
+        assert p.capacity == 3
 
     def test_get_cost_dimension(self):
         p = packing_problem.PackingProblem(25.5, 5)
-        assert p.get_cost_dimension() == 5
+        assert p.cost_dimension == 5
 
     def test_set_current_inputs(self):
         problem_instance = packing_problem.PackingProblem(0.5, 2)
@@ -33,7 +33,7 @@ class TestPackingProblem:
         problem_instance.set_current_inputs([Item(0.8, [0.4, 0.2])])
         assert problem_instance.get_available_costs() == [[[0.4, 0.2]]]
         assert problem_instance.get_available_values() == [[0.8]]
-        assert problem_instance.get_options_per_instant() == 1
+        assert problem_instance.items_per_instant == 1
 
     def test_two_inputs_in_a_row(self):
         problem_instance = packing_problem.PackingProblem(0.5, 2)

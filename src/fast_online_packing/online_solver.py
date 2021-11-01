@@ -27,11 +27,11 @@ from operator import itemgetter
 from fast_online_packing import helper
 from fast_online_packing.offline_solvers.base_solver import BaseSolver
 from fast_online_packing.offline_solvers.python_mip_solver import PythonMIPSolver
-from fast_online_packing.packing_problem import PackingProblem
 from fast_online_packing.item import Item
+from fast_online_packing.base_online_solver import BaseOnlineSolver
 
 
-class OnlineSolver:
+class OnlineSolver(BaseOnlineSolver):
     """Solves the Online Packing Problem.
 
     Parameters
@@ -63,7 +63,7 @@ class OnlineSolver:
     total_time : int
         Total number of instants in the algorithm.
     current_time : int
-        Count of the instant the algorithm currently is. 1-indexed.
+        Count of the instant the algorithm currently is. 0-indexed.
     optimum_value : float
         Sum of the values of the items packed in the optimal solution (solving offline).
     cost_dimension : int
@@ -87,51 +87,40 @@ class OnlineSolver:
         Informs if the algorithm is in agreement with the theoric premises.
     """
 
-    p: PackingProblem
     e: float
     mwu: MwuMax
     z: Union[float, None]
     delta: float
-    total_time: int
-    current_time: int
-    optimum_value: float
 
     def __init__(self, cost_dimension: int, total_time: int, capacity: float, e: Union[float, None] = None,
                  solver_cls: Type[BaseSolver] = PythonMIPSolver):
-        self.z = None
-        self.p = PackingProblem(capacity, cost_dimension)
-        self._init_params(cost_dimension, total_time, capacity, e)
-        self._solver_cls = solver_cls
-        self.optimum_value = float("inf")
 
-    def _init_params(self, cost_dimension: int, total_time: int, capacity: float,
-                     e: Union[float, None]) -> None:
-        """Initializes method parameters
-        """
-        if e is None:
-            self.e = sqrt(log(cost_dimension, 2)/capacity)
-        else:
-            assert e + 1e-6 < 0.5
-            assert e - 1e-6 > 0
-            self.e = e
+        super().__init__(cost_dimension, total_time, capacity, e)
         self.z = None
         e_2 = self.e * self.e
         self.delta = 12 * e_2 * log((cost_dimension+2)/e_2) / log(cost_dimension)
-        self.current_time = 1
         self._initial_phase_size = int(ceil(self.delta * total_time))
-        self.total_time = total_time
         self.mwu = MwuMax(self.cost_dimension, self.e)
+
+    def _init_e(self, e: Union[float, None]) -> float:
+        if e is None:
+            return sqrt(log(self.cost_dimension, 2)/self.capacity)
+        else:
+            assert e + 1e-6 < 0.5
+            assert e - 1e-6 > 0
+            return float(e)
 
     @property
     def cost_dimension(self):
-        return self.p.get_cost_dimension()
+        return self.p.cost_dimension
 
     def print_params(self):
         """Print algorithm parameters.
         """
-        print(f"capacity = {self.p.get_capacity()}")
+        print(f"capacity = {self.p.capacity}")
         print(f"cost dimension = {self.cost_dimension}")
         print(f"e = {self.e}")
+        print(f"estimated z = {self.z}")
         print(f"delta = {self.delta}")
         print(f"initial phase size = {self._initial_phase_size}")
         print(f"total time = {self.total_time}")
@@ -144,12 +133,12 @@ class OnlineSolver:
         float
             Z parameter
         """
-        scaled_cap = (self.delta * self.p.get_capacity() +
-                      sqrt(3 * self.delta * self.p.get_capacity() *
+        scaled_cap = (self.delta * self.p.capacity +
+                      sqrt(3 * self.delta * self.p.capacity *
                            log((self.cost_dimension+2)/(self.e * self.e))))
         s = self._solver_cls(self.p.get_available_values(), self.p.get_available_costs(), scaled_cap)
         s.solve()
-        return 2 * s.optimum_value / (self.delta * self.p.get_capacity())
+        return 2 * s.optimum_value / (self.delta * self.p.capacity)
 
     def _choose_index_to_pack(self, current_items: List[Item]) -> int:
         """Given available items for an instant, chooses which item to pack.
@@ -164,7 +153,7 @@ class OnlineSolver:
         int
             Index of the item with the highest evaluated value.
         """
-        if self.current_time <= self._initial_phase_size:
+        if self.current_time < self._initial_phase_size:
             return random.randint(-1, len(current_items)-1)
         else:
             if self.z is None:
@@ -190,7 +179,7 @@ class OnlineSolver:
         float
             Gains of a single dimension
         """
-        return cost - self.p.get_capacity()/self.total_time
+        return cost - self.p.capacity/self.total_time
 
     def pack_one(self, available_values: List[float], available_costs: List[List[float]]) -> int:
         """Receives the new instant's items and chooses one to pack.
@@ -219,29 +208,6 @@ class OnlineSolver:
         self.current_time += 1
         return chosen_idx
 
-    def compute_optimum(self) -> float:
-        """Solve the problem offline to find out the optimum solution.
-
-        Returns
-        -------
-        The optimum solution for the problem.
-        """
-        s = self._solver_cls(self.p.get_available_values(),
-                             self.p.get_available_costs(), self.p.get_capacity())
-        s.solve()
-        self.optimum_value = s.optimum_value
-        return s.optimum_value
-
-    def print_result(self) -> None:
-        """Print usefull information about the algorithm execution.
-        """
-        print(f"Opt: {self.optimum_value}")
-        print(f"Alg: {self.p._packed_value_sum}")  # type: ignore
-        print(f"Score Alg = {self.p._packed_value_sum/self.optimum_value :.3f} * Opt")  # type: ignore
-        print(f"     min {{B, TOPT}} = {self.get_premises_min():.3f}")
-        print(f"     B = {self.p.get_capacity()}")
-        print(f"     TOPT = {self.optimum_value}")
-
     def get_premises_min(self) -> float:
         """Get the minimum value of capacity and `optimum_value` for the
         premises to be valid.
@@ -251,7 +217,7 @@ class OnlineSolver:
         float
             Minimum value of capacity and `optimum_value` for premises to be valid.
         """
-        return log(self.p.get_cost_dimension()) / (self.e*self.e)
+        return log(self.p.cost_dimension) / (self.e*self.e)
 
     def respect_premises(self) -> bool:
         """Informs if both the algorithm premises (`optimum_value` and capacity) were fulfilled.
@@ -261,7 +227,7 @@ class OnlineSolver:
         bool
             True if both premises were fulfilled, False otherwise.
         """
-        if min(self.optimum_value, self.p.get_capacity()) + 1e-6 < self.get_premises_min():
+        if min(self.optimum_value, self.p.capacity) + 1e-6 < self.get_premises_min():
             return False
         else:
             return True

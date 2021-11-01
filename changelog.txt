@@ -1,0 +1,9 @@
+Items:
+- Added Items class
+- Updated all code
+- Updated old docstrings
+- Updated all tests (passing)
+
+TODO:
+- Generate new documentation
+- Document items.py with docstring
