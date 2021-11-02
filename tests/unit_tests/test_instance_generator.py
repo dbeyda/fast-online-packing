@@ -39,5 +39,5 @@ class TestGenerateValidInstance:
         cost_dim = 3
         _, _, cap, e = generate_valid_instance(target_delta, 10, 3, 3)
         delta = (12 / cap) * log((cost_dim+2)*cap / log(cost_dim))
-        assert e <= 0.5-1e-6
-        assert delta - 1e-6 <= target_delta
+        assert e <= 0.5
+        assert delta <= target_delta

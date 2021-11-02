@@ -1,5 +1,5 @@
 from typing import Any
-import pytest
+import math
 from fast_online_packing.offline_solvers.google_knapsack_solver import GoogleKnapsackSolver
 from fast_online_packing.offline_solvers.python_mip_solver import PythonMIPSolver
 
@@ -55,7 +55,7 @@ class TestGoogleKnapsackSolver:
             s = GoogleKnapsackSolver(e["values"], e["weights"], e["cap"])
             s.solve()
             expected = e["result"]
-            assert (expected - 1e-6) <= s.optimum_value <= (expected + 1e-6)
+            assert math.isclose(expected, s.optimum_value)
 
 
 class TestPythonMipSolver:
@@ -64,4 +64,4 @@ class TestPythonMipSolver:
             s = PythonMIPSolver(e["values"], e["weights"], e["cap"])
             s.solve()
             expected = e["result"]
-            assert (expected - 1e-6) <= s.optimum_value <= (expected + 1e-6)
+            assert math.isclose(expected, s.optimum_value)

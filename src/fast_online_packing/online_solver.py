@@ -106,8 +106,8 @@ class OnlineSolver(BaseOnlineSolver):
         if e is None:
             return sqrt(log(self.cost_dimension, 2)/self.capacity)
         else:
-            assert e + 1e-6 < 0.5
-            assert e - 1e-6 > 0
+            assert e < 0.5
+            assert e > 0
             return float(e)
 
     @property
@@ -164,7 +164,7 @@ class OnlineSolver(BaseOnlineSolver):
             # item that has the highest evaluated value from evaluated_options
             max_idx, max_value = max(enumerate(evaluated_options), key=itemgetter(1))
             # evaluate if its worth to get the item or not
-            return max_idx if max_value > 0+1e-6 else -1
+            return max_idx if max_value > 0 else -1
 
     def _compute_mwu_gains(self, cost: float) -> float:
         """Compute MWU cost(gains) function for a single dimension.

@@ -44,8 +44,8 @@ class MwuMax:
 
     def __init__(self, n_experts: int, eps: float, reward_radius: float = 1.0):
         assert n_experts > 0
-        assert eps > 1e-6
-        assert eps < 0.5-1e-6
+        assert eps > 0
+        assert eps < 0.5
         assert reward_radius > 0
 
         self._n_experts = n_experts

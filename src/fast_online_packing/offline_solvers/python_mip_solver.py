@@ -104,7 +104,7 @@ class PythonMIPSolver(BaseSolver):
         if self.status in [OptimizationStatus.OPTIMAL, OptimizationStatus.FEASIBLE]:
             self.optimum_value = self.solver.objective_value
             for idx, v in enumerate(self.solver.vars):
-                if abs(v.x) > 1e-6:  # chosen options for an instant are the positive variables
+                if abs(v.x) > 0.5:  # chosen options for an instant are the positive variables
                     chosen_idx = idx % self._items_per_instant
                     time_instant = idx // self._items_per_instant
                     self.packed_items[time_instant] = chosen_idx

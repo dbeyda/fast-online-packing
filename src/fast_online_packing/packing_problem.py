@@ -95,9 +95,9 @@ class PackingProblem:
         Exception
             If capacity is negative.
         """
-        if capacity < 0 - 1e-6:
+        if capacity < 0:
             raise Exception(f"Capacity must be >= 0 (tried setting to {capacity}).")
-        elif self._capacity >= 0-1e-6:
+        elif self._capacity >= 0:
             raise Exception(f"Capacity already set (capacity={self._capacity}).")
         else:
             self._capacity = float(capacity)
@@ -140,12 +140,12 @@ class PackingProblem:
                  but received {len(items)}.")
         for item in items:
             # validate rewards between 0 and 1:
-            if item.reward < 0.0 - 1e-6 or item.reward > 1 + 1e-6:
+            if item.reward < 0 or item.reward > 1:
                 raise Exception("Error: item's rewards must be in the range [0, 1].")
             if item.cost_dim != self._cost_dimension:
                 raise Exception("Error: received an item with a different cost dimension.")
             for c in item.costs:
-                if c < 0 - 1e-6 or c > 1 + 1e-6:
+                if c < 0 or c > 1:
                     raise Exception("Error: item's costs must be in range range [0, 1].")
 
     def set_current_inputs(self, items: List[Item]) -> None:
@@ -175,7 +175,7 @@ class PackingProblem:
             return True
         item = self._revealed_instants[-1][idx]
         for j in range(self._cost_dimension):
-            if item.costs[j] + self._packed_costs_sum[j] > self._capacity + 1e-6:
+            if item.costs[j] + self._packed_costs_sum[j] > self._capacity:
                 return False
         return True
 
