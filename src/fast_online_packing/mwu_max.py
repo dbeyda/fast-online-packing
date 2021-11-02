@@ -9,7 +9,7 @@ import copy
 
 
 class MwuMax:
-    """Class that implements MWU-max algorithm, adapted for gains in range [-1, 1]
+    """Class that implements MWU-max algorithm for the full-dimensional simplex (sum probabilities <= 1)
 
     Parameters
     ----------
@@ -17,6 +17,8 @@ class MwuMax:
         Dimension of the problem cost function.
     eps : float
         Calibration parameter that regulates the step-size of the updates.
+    reward_radius : float
+        Maximum range of rewards. Rewards are considered to be in range [-reward_radius, reward_radius].
 
     Methods
     -------
@@ -38,15 +40,18 @@ class MwuMax:
     _eps: float
     _weights: List[float]
     _probs: List[float]
+    _reward_radius: float
 
-    def __init__(self, n_experts: int, eps: float):
+    def __init__(self, n_experts: int, eps: float, reward_radius: float = 1.0):
         assert n_experts > 0
         assert eps > 1e-6
         assert eps < 0.5-1e-6
+        assert reward_radius > 0
 
         self._n_experts = n_experts
         self._eps = eps
         self._weights = [1 for _ in range(self._n_experts)]
+        self._reward_radius = reward_radius
         # here we use _n_experts+1 because of the extra dimension to transform the
         # equality constraint into <=.
         self._probs = [1/(self._n_experts+1) for _ in range(self._n_experts)]
@@ -68,9 +73,9 @@ class MwuMax:
 
         for i in range(self._n_experts):
             if expert_gains[i] >= 0:
-                self._weights[i] *= (1 + self._eps)**expert_gains[i]
+                self._weights[i] *= (1 + self._eps) ** (expert_gains[i]/self._reward_radius)
             else:
-                self._weights[i] *= (1 - self._eps)**(-expert_gains[i])
+                self._weights[i] *= (1 - self._eps)**(-expert_gains[i]/self._reward_radius)
         # we sum an extra 1 that is the extra expert weight
         sum_weights = sum(self._weights)+1
         for i in range(self._n_experts):
