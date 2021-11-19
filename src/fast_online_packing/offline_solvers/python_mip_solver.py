@@ -1,5 +1,5 @@
 from typing import Any, Union, List
-from mip import Model, MAXIMIZE, CBC, BINARY, OptimizationStatus, xsum, maximize
+from mip import Model, MAXIMIZE, BINARY, OptimizationStatus, xsum, maximize
 from fast_online_packing.offline_solvers.base_solver import BaseSolver
 
 
@@ -71,7 +71,7 @@ class PythonMIPSolver(BaseSolver):
         -------
         None
         """
-        self.solver = Model(sense=MAXIMIZE, solver_name=CBC)
+        self.solver = Model(sense=MAXIMIZE)
         m = self.solver
         m.verbose = 0
         # creating variables for all instants and options
