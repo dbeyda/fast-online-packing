@@ -94,21 +94,18 @@ class OnlineSolver(BaseOnlineSolver):
 
     def __init__(self, cost_dimension: int, total_time: int, capacity: float, e: Union[float, None] = None,
                  solver_cls: Type[BaseSolver] = PythonMIPSolver):
+        if e is None:
+            e = sqrt(log(cost_dimension, 2)/capacity)
+        else:
+            assert e < 0.5
+            assert e > 0
 
-        super().__init__(cost_dimension, total_time, capacity, e)
+        super().__init__(cost_dimension, total_time, capacity, e, solver_cls)
         self.z = None
         e_2 = self.e * self.e
         self.delta = 12 * e_2 * log((cost_dimension+2)/e_2) / log(cost_dimension)
         self._initial_phase_size = int(ceil(self.delta * total_time))
         self.mwu = MwuMax(self.cost_dimension, self.e)
-
-    def _init_e(self, e: Union[float, None]) -> float:
-        if e is None:
-            return sqrt(log(self.cost_dimension, 2)/self.capacity)
-        else:
-            assert e < 0.5
-            assert e > 0
-            return float(e)
 
     @property
     def cost_dimension(self):
@@ -208,26 +205,6 @@ class OnlineSolver(BaseOnlineSolver):
         self.current_time += 1
         return chosen_idx
 
-    def get_premises_min(self) -> float:
-        """Get the minimum value of capacity and `optimum_value` for the
-        premises to be valid.
-
-        Returns
-        -------
-        float
-            Minimum value of capacity and `optimum_value` for premises to be valid.
-        """
-        return log(self.p.cost_dimension) / (self.e*self.e)
-
-    def respect_premises(self) -> bool:
-        """Informs if both the algorithm premises (`optimum_value` and capacity) were fulfilled.
-
-        Returns
-        -------
-        bool
-            True if both premises were fulfilled, False otherwise.
-        """
-        if min(self.optimum_value, self.p.capacity) + 1e-6 < self.get_premises_min():
-            return False
-        else:
-            return True
+    def print_result(self) -> None:
+        print("Original AD results:")
+        super().print_result()

@@ -21,12 +21,12 @@ from fast_online_packing.online_solver import OnlineSolver
 # print(">> Ok.")
 
 n_instants = 400
-cost_dim = 5
+cost_dim = 3
 
 values, costs, cap, e = generator.generate_valid_instance(
     0.3, n_instants, cost_dim, items_per_instant=3)
 
-s = OnlineSolver(cost_dim, n_instants, cap, 0.05, PythonMIPSolver)
+s = OnlineSolver(cost_dim, n_instants, cap, 0.08, PythonMIPSolver)
 
 for v, c in zip(values, costs):
     s.pack_one(v, c)
@@ -37,5 +37,3 @@ s.print_params()
 print("\n")
 
 s.print_result()
-if not s.respect_premises():
-    print("\n! OBS ! constrains violated.")

@@ -102,7 +102,7 @@ def generate_valid_instance(target_delta: float, n_instants: int, cost_dim: int,
 
 
 def generate_random_instance(n_instants: int, cost_dim: int, items_per_instant: int = 1) -> \
-        Tuple[List[List[float]], List[List[List[float]]], float, float]:
+        Tuple[List[List[float]], List[List[List[float]]], float]:
     """Generates random values, costs and capacity for a Packing Problem instance.
     Instances generated here may not respect guarantees constraints.
 
@@ -133,5 +133,4 @@ def generate_random_instance(n_instants: int, cost_dim: int, items_per_instant: 
     costs: List[List[List[float]]] = _get_random_costs(n_instants, items_per_instant, cost_dim)
 
     cap = random.random() * n_instants/2
-    e = sqrt(log(cost_dim, 2)/cap)
-    return values.copy(), deepcopy(costs), cap, e
+    return values.copy(), deepcopy(costs), cap
