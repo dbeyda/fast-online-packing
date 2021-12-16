@@ -21,7 +21,6 @@ Update Method: a Meta Algorithm and Applications. Theory of Computing [electroni
 
 from math import log, sqrt, ceil
 from typing import List, Union, Type
-import random
 from fast_online_packing.mwu_max import MwuMax
 from operator import itemgetter
 from fast_online_packing import helper
@@ -105,6 +104,7 @@ class OnlineSolver(BaseOnlineSolver):
         e_2 = self.e * self.e
         self.delta = 12 * e_2 * log((cost_dimension+2)/e_2) / log(cost_dimension)
         self._initial_phase_size = int(ceil(self.delta * total_time))
+        self._second_phase_size = total_time - self._initial_phase_size
         self.mwu = MwuMax(self.cost_dimension, self.e)
 
     @property
@@ -150,18 +150,15 @@ class OnlineSolver(BaseOnlineSolver):
         int
             Index of the item with the highest evaluated value.
         """
-        if self.current_time < self._initial_phase_size:
-            return random.randint(-1, len(current_items)-1)
-        else:
-            if self.z is None:
-                self.z = self._compute_z()
-            evaluated_options = [item.reward
-                                 - self.z * helper.dot_product(self.mwu.get_probs(), item.costs)
-                                 for item in current_items]
-            # item that has the highest evaluated value from evaluated_options
-            max_idx, max_value = max(enumerate(evaluated_options), key=itemgetter(1))
-            # evaluate if its worth to get the item or not
-            return max_idx if max_value > 0 else -1
+        if self.z is None:
+            self.z = self._compute_z()
+        evaluated_options = [item.reward
+                             - self.z * helper.dot_product(self.mwu.get_probs(), item.costs)
+                             for item in current_items]
+        # item that has the highest evaluated value from evaluated_options
+        max_idx, max_value = max(enumerate(evaluated_options), key=itemgetter(1))
+        # evaluate if its worth to get the item or not
+        return max_idx if max_value > 0 else -1
 
     def _compute_mwu_gains(self, cost: float) -> float:
         """Compute MWU cost(gains) function for a single dimension.
@@ -176,7 +173,7 @@ class OnlineSolver(BaseOnlineSolver):
         float
             Gains of a single dimension
         """
-        return cost - self.p.capacity/self.total_time
+        return cost - self.p.capacity/self._second_phase_size
 
     def pack_one(self, available_values: List[float], available_costs: List[List[float]]) -> int:
         """Receives the new instant's items and chooses one to pack.
@@ -195,13 +192,19 @@ class OnlineSolver(BaseOnlineSolver):
         """
         current_items = [Item(r, c) for r, c in zip(available_values, available_costs)]
         self.p.set_current_inputs(current_items)
-        chosen_idx = self._choose_index_to_pack(current_items)
-        if not self.p.item_fits(chosen_idx):
+
+        if self.current_time < self._initial_phase_size:
             chosen_idx = -1
-        self.p.pack(chosen_idx)
-        received_costs = current_items[chosen_idx].costs if chosen_idx != -1 else [0]*self.cost_dimension
-        mwu_gains = list(map(self._compute_mwu_gains, received_costs))
-        self.mwu.update_weights(mwu_gains)
+            self.p.pack(chosen_idx)
+        else:
+            chosen_idx = self._choose_index_to_pack(current_items)
+            if not self.p.item_fits(chosen_idx):
+                chosen_idx = -1
+            self.p.pack(chosen_idx)
+            received_costs = current_items[chosen_idx].costs if chosen_idx != -1 else [0]*self.cost_dimension
+            mwu_gains = list(map(self._compute_mwu_gains, received_costs))
+            self.mwu.update_weights(mwu_gains)
+
         self.current_time += 1
         return chosen_idx
 
